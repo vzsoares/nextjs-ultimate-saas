@@ -1,6 +1,6 @@
-import { PageProps } from '@/types';
+import { LayoutProps } from '@/types';
 import ThemeRegistryProvider from '../../ThemeRegistry';
 
-export default function Layout({ children, params }: PageProps) {
+export default function Layout({ children, params }: LayoutProps) {
     return <ThemeRegistryProvider client={params.client}>{children}</ThemeRegistryProvider>;
 }

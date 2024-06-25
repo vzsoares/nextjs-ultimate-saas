@@ -10,7 +10,7 @@ export default function Page(p: PageProps) {
     return HomeFactory(client);
 }
 
-export function HomeFactory(client: Clients) {
+function HomeFactory(client: Clients) {
     return (
         <main className="min-h-screen flex-col flex">
             <nav className="px-4 py-2 w-full max-w-[1080px] bg-primary-500 m-auto flex">
