@@ -1,5 +1,6 @@
 import { NextRequest, NextResponse } from 'next/server';
 
+import { ClientStrategyContext } from './ClinetInterface';
 import { ClientsArray } from './schemas';
 import { Clients } from './types';
 
@@ -10,12 +11,13 @@ const PartnerHost: Record<string, Clients> = {
     'localhost:3000': 'foo',
 };
 
-export type RouteStack = '/index' | '/about' | '/contact';
+export type RouteStack = '/index' | '/about' | '/contact' | '/404';
 /** ROUTE  PERMISSIONS */
 export const AppRouteStackPermissions: Record<RouteStack, Clients[]> = {
     '/index': ['baz', 'bar', 'foo'],
     '/about': ['baz', 'bar', 'foo'],
     '/contact': ['baz', 'bar', 'foo'],
+    '/404': ['baz', 'bar', 'foo'],
 };
 
 export function middleware(req: NextRequest) {
@@ -25,16 +27,23 @@ export function middleware(req: NextRequest) {
 
     for (const client of Object.values(ClientsArray)) {
         // Instantiate client ctx obj
-        // const PartnerCtx = new ClientStrategy(client);
+        const ClientContext = new ClientStrategyContext(client);
 
         const clientPrefix = `/${client}`;
 
-        // Handle multiple hosts
+        // handle multiple hosts
         if (PartnerHost[reqHost] === client) {
-            url.pathname = clientPrefix + url.pathname;
+            // TODO create a env for this
             if (process.env.NODE_ENV === 'development') {
                 //skip
-            } else return NextResponse.rewrite(url);
+            } else {
+                if (reqPath.startsWith(clientPrefix + '/') || reqPath == clientPrefix) {
+                    url.pathname = url.pathname.slice(clientPrefix.length);
+                    return NextResponse.redirect(url);
+                }
+                url.pathname = clientPrefix + url.pathname;
+                return NextResponse.rewrite(url);
+            }
         }
 
         // handle route block/redirect
@@ -44,17 +53,17 @@ export function middleware(req: NextRequest) {
             for (const [route, permissions] of Object.entries(AppRouteStackPermissions)) {
                 if (baseRoute.startsWith(route) || (route === '/index' && baseRoute === '')) {
                     if (!permissions.includes(client)) {
-                        // TODO handle redirect
-                        const routeToRedirect = '/404';
+                        const routeToRedirect = ClientContext.getRouteToRedirect(route as RouteStack);
                         // handle external redirect
                         if (routeToRedirect.startsWith('http')) {
                             return NextResponse.redirect(routeToRedirect);
                         } else {
                             url.pathname = clientPrefix + routeToRedirect;
-                            // TODO might be able to redirect instead of rewrite in the future
-                            return NextResponse.rewrite(url);
+                            return NextResponse.redirect(url);
                         }
-                    } else return NextResponse.next();
+                    } else {
+                        return NextResponse.next();
+                    }
                 }
             }
             break;
@@ -64,7 +73,7 @@ export function middleware(req: NextRequest) {
     // handle forbiden access to /index
     if (reqPath === '/') {
         url.pathname = '/404';
-        return NextResponse.rewrite(url);
+        return NextResponse.redirect(url);
     }
 
     // Ensure correct paths and block unknown clients
@@ -74,7 +83,7 @@ export function middleware(req: NextRequest) {
         if (slPath === appPath) return NextResponse.next();
     }
 
-    url.pathname = '/';
+    url.pathname = '/404';
     return NextResponse.redirect(url);
 }
 
