@@ -1,3 +1,4 @@
 import { z } from 'zod';
 
-export const ClientSchema = z.enum(['foo', 'bar', 'baz']);
+export const ClientsArray = ['foo', 'bar', 'baz'] as const;
+export const ClientSchema = z.enum(ClientsArray);
