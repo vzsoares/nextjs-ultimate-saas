@@ -1,3 +1,7 @@
 export default function Page() {
-    return <>404</>;
+    return (
+        <div className="h-screen flex">
+            <p className="m-auto text-center">404 nothing found</p>
+        </div>
+    );
 }

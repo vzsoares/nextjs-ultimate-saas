@@ -49,9 +49,8 @@ export function middleware(req: NextRequest) {
         // handle route block/redirect
         if (reqPath.startsWith(clientPrefix + '/') || reqPath === clientPrefix) {
             const baseRoute = reqPath.slice(clientPrefix.length);
-
             for (const [route, permissions] of Object.entries(AppRouteStackPermissions)) {
-                if (baseRoute.startsWith(route) || (route === '/index' && baseRoute === '')) {
+                if (baseRoute === route || (route === '/index' && baseRoute === '')) {
                     if (!permissions.includes(client)) {
                         const routeToRedirect = ClientContext.getRouteToRedirect(route as RouteStack);
                         // handle external redirect
