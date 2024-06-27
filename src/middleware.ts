@@ -37,7 +37,10 @@ export function middleware(req: NextRequest) {
             if (process.env.NODE_ENV === 'development') {
                 //skip
             } else {
-                if (reqPath.startsWith(clientPrefix + '/') || reqPath == clientPrefix) {
+                if (
+                    reqPath.startsWith(clientPrefix + '/') ||
+                    reqPath == clientPrefix
+                ) {
                     url.pathname = url.pathname.slice(clientPrefix.length);
                     return NextResponse.redirect(url);
                 }
@@ -47,12 +50,23 @@ export function middleware(req: NextRequest) {
         }
 
         // handle route block/redirect
-        if (reqPath.startsWith(clientPrefix + '/') || reqPath === clientPrefix) {
+        if (
+            reqPath.startsWith(clientPrefix + '/') ||
+            reqPath === clientPrefix
+        ) {
             const baseRoute = reqPath.slice(clientPrefix.length);
-            for (const [route, permissions] of Object.entries(AppRouteStackPermissions)) {
-                if (baseRoute === route || (route === '/index' && baseRoute === '')) {
+            for (const [route, permissions] of Object.entries(
+                AppRouteStackPermissions
+            )) {
+                if (
+                    baseRoute === route ||
+                    (route === '/index' && baseRoute === '')
+                ) {
                     if (!permissions.includes(client)) {
-                        const routeToRedirect = ClientContext.getRouteToRedirect(route as RouteStack);
+                        const routeToRedirect =
+                            ClientContext.getRouteToRedirect(
+                                route as RouteStack
+                            );
                         // handle external redirect
                         if (routeToRedirect.startsWith('http')) {
                             return NextResponse.redirect(routeToRedirect);

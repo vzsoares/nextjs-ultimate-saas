@@ -13,7 +13,7 @@
     "prettier-plugin-sort-json",
     "@ianvs/prettier-plugin-sort-imports"
   ],
-  "printWidth": 120,
+  "printWidth": 80,
   "trailingComma": "es5",
   "singleQuote": true,
   "tabWidth": 4
