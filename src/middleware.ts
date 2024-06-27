@@ -31,6 +31,8 @@ export function middleware(req: NextRequest) {
     const reqPath = req.nextUrl.pathname;
     const url = req.nextUrl.clone();
 
+    if (reqPath === '/404') return NextResponse.next();
+
     for (const client of Object.values(AvClients)) {
         // Instantiate client ctx obj
         const ClientContext = new ClientStrategyContext(client);
@@ -38,19 +40,9 @@ export function middleware(req: NextRequest) {
         const clientPrefix = `/${client}`;
 
         // handle multiple hosts
-        if (PartnerHost[reqHost] === client) {
-            if (
-                reqPath.startsWith(clientPrefix + '/') ||
-                reqPath == clientPrefix
-            ) {
-                url.pathname = url.pathname.slice(clientPrefix.length);
-                return NextResponse.redirect(url);
-            }
-            url.pathname = clientPrefix + url.pathname;
-            return NextResponse.rewrite(url);
+        if (PartnerHost[reqHost] !== client) {
+            continue;
         }
-
-        // handle route block/redirect
         if (
             reqPath.startsWith(clientPrefix + '/') ||
             reqPath === clientPrefix
@@ -71,31 +63,32 @@ export function middleware(req: NextRequest) {
                         // handle external redirect
                         if (routeToRedirect.startsWith('http')) {
                             return NextResponse.redirect(routeToRedirect);
-                        } else {
-                            url.pathname = clientPrefix + routeToRedirect;
-                            return NextResponse.redirect(url);
                         }
-                    } else {
-                        return NextResponse.next();
+                        url.pathname = clientPrefix + routeToRedirect;
+                        return NextResponse.redirect(url);
                     }
+                    url.pathname = url.pathname.slice(clientPrefix.length);
+                    return NextResponse.redirect(url);
                 }
             }
             break;
         }
+        url.pathname = clientPrefix + url.pathname;
+        return NextResponse.rewrite(url);
     }
 
     // handle forbiden access to /index
-    if (reqPath === '/') {
-        url.pathname = '/404';
-        return NextResponse.redirect(url);
-    }
+    // if (reqPath === '/') {
+    //     url.pathname = '/404';
+    //     return NextResponse.redirect(url);
+    // }
 
     // Ensure correct paths and block unknown clients
-    for (const appPath of Object.keys(AppRouteStackPermissions)) {
-        const size = appPath.length;
-        const slPath = reqPath.slice(0, size);
-        if (slPath === appPath) return NextResponse.next();
-    }
+    // for (const appPath of Object.keys(AppRouteStackPermissions)) {
+    //     const size = appPath.length;
+    //     const slPath = reqPath.slice(0, size);
+    //     if (slPath === appPath) return NextResponse.next();
+    // }
 
     url.pathname = '/404';
     return NextResponse.redirect(url);
