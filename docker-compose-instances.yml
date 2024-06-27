@@ -1,0 +1,59 @@
+version: '3.8'
+services:
+    nginx:
+        restart: always
+        build:
+            context: ./.nginx
+            dockerfile: Dockerfile
+            args:
+                IMAGE_NAME_3000: foo
+                IMAGE_NAME_3001: bar
+                IMAGE_NAME_3002: baz
+        ports:
+            - '3000:3000'
+            - '3001:3001'
+            - '3002:3002'
+        depends_on:
+            - foo
+            - bar
+            - baz
+        networks:
+            - app-network
+
+    foo:
+        build:
+            context: ./
+            dockerfile: Dockerfile
+            args:
+                CLIENT: foo
+                PORT: 3000
+        expose:
+            - '3000'
+        networks:
+            - app-network
+    bar:
+        build:
+            context: ./
+            dockerfile: Dockerfile
+            args:
+                CLIENT: bar
+                PORT: 3001
+        expose:
+            - '3001'
+        networks:
+            - app-network
+    baz:
+        build:
+            context: ./
+            dockerfile: Dockerfile
+            args:
+                CLIENT: baz
+                PORT: 3002
+        expose:
+            - '3002'
+        networks:
+            - app-network
+
+networks:
+    app-network:
+        driver: bridge
