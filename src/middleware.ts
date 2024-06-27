@@ -8,7 +8,8 @@ const PartnerHost: Record<string, Clients> = {
     'foo.com': 'foo',
     'bar.com': 'bar',
     'baz.com': 'baz',
-    'localhost:3000': 'foo',
+    [process.env.NEXT_PUBLIC_LOCALHOST === 'TRUE' ? 'localhost:3000' : '']:
+        'foo',
 };
 
 export type RouteStack = '/index' | '/about' | '/contact' | '/404';
@@ -20,12 +21,17 @@ export const AppRouteStackPermissions: Record<RouteStack, Clients[]> = {
     '/404': ['baz', 'bar', 'foo'],
 };
 
+const BUILD_TYPE = process.env.NEXT_PUBLIC_BUILD_TYPE as 'INSTANCES' | 'SINGLE';
+const BASE_CLIENT = process.env.NEXT_PUBLIC_BASE_CLIENT as Clients;
+
+const AvClients = BUILD_TYPE === 'INSTANCES' ? [BASE_CLIENT] : ClientsArray;
+
 export function middleware(req: NextRequest) {
     const reqHost = req.nextUrl.host;
     const reqPath = req.nextUrl.pathname;
     const url = req.nextUrl.clone();
 
-    for (const client of Object.values(ClientsArray)) {
+    for (const client of Object.values(AvClients)) {
         // Instantiate client ctx obj
         const ClientContext = new ClientStrategyContext(client);
 
@@ -33,20 +39,15 @@ export function middleware(req: NextRequest) {
 
         // handle multiple hosts
         if (PartnerHost[reqHost] === client) {
-            // TODO create a env for this
-            if (process.env.NODE_ENV === 'development') {
-                //skip
-            } else {
-                if (
-                    reqPath.startsWith(clientPrefix + '/') ||
-                    reqPath == clientPrefix
-                ) {
-                    url.pathname = url.pathname.slice(clientPrefix.length);
-                    return NextResponse.redirect(url);
-                }
-                url.pathname = clientPrefix + url.pathname;
-                return NextResponse.rewrite(url);
+            if (
+                reqPath.startsWith(clientPrefix + '/') ||
+                reqPath == clientPrefix
+            ) {
+                url.pathname = url.pathname.slice(clientPrefix.length);
+                return NextResponse.redirect(url);
             }
+            url.pathname = clientPrefix + url.pathname;
+            return NextResponse.rewrite(url);
         }
 
         // handle route block/redirect
