@@ -43,55 +43,77 @@ export function middleware(req: NextRequest) {
         if (PartnerHost[reqHost] !== client) {
             continue;
         }
+
+        const { route, isFound, isValid } = getRouteStatus({
+            reqPath,
+            client,
+            clientPrefix,
+        });
+
+        if (!isValid) {
+            const routeToRedirect = ClientContext.getRouteToRedirect(route);
+            // handle external redirect
+            if (routeToRedirect.startsWith('http')) {
+                return NextResponse.redirect(routeToRedirect);
+            }
+            url.pathname = routeToRedirect;
+            return NextResponse.redirect(url);
+        }
+
+        if (!isFound) {
+            url.pathname = '/404';
+            return NextResponse.redirect(url);
+        }
+
+        /* mask client in final url using **rewrite**
+         * in   `/foo/about`
+         * out  `/about`                        */
         if (
             reqPath.startsWith(clientPrefix + '/') ||
             reqPath === clientPrefix
         ) {
-            const baseRoute = reqPath.slice(clientPrefix.length);
-            for (const [route, permissions] of Object.entries(
-                AppRouteStackPermissions
-            )) {
-                if (
-                    baseRoute === route ||
-                    (route === '/index' && baseRoute === '')
-                ) {
-                    if (!permissions.includes(client)) {
-                        const routeToRedirect =
-                            ClientContext.getRouteToRedirect(
-                                route as RouteStack
-                            );
-                        // handle external redirect
-                        if (routeToRedirect.startsWith('http')) {
-                            return NextResponse.redirect(routeToRedirect);
-                        }
-                        url.pathname = clientPrefix + routeToRedirect;
-                        return NextResponse.redirect(url);
-                    }
-                    url.pathname = url.pathname.slice(clientPrefix.length);
-                    return NextResponse.redirect(url);
-                }
-            }
-            break;
+            url.pathname = url.pathname.slice(clientPrefix.length);
+            return NextResponse.redirect(url);
+        } else {
+            url.pathname = clientPrefix + url.pathname;
+            return NextResponse.rewrite(url);
         }
-        url.pathname = clientPrefix + url.pathname;
-        return NextResponse.rewrite(url);
     }
-
-    // handle forbiden access to /index
-    // if (reqPath === '/') {
-    //     url.pathname = '/404';
-    //     return NextResponse.redirect(url);
-    // }
-
-    // Ensure correct paths and block unknown clients
-    // for (const appPath of Object.keys(AppRouteStackPermissions)) {
-    //     const size = appPath.length;
-    //     const slPath = reqPath.slice(0, size);
-    //     if (slPath === appPath) return NextResponse.next();
-    // }
 
     url.pathname = '/404';
     return NextResponse.redirect(url);
+}
+
+function getRouteStatus({
+    reqPath,
+    clientPrefix,
+    client,
+}: {
+    reqPath: string;
+    clientPrefix: string;
+    client: Clients;
+}): { isValid: boolean; isFound: boolean; route: RouteStack } {
+    const baseRoute = reqPath.startsWith(clientPrefix)
+        ? reqPath.slice(clientPrefix.length)
+        : reqPath;
+    const entries = Object.entries(AppRouteStackPermissions);
+    for (const [route, permissions] of entries) {
+        if (
+            baseRoute === route ||
+            (route === '/index' && (baseRoute === '/' || baseRoute === ''))
+        ) {
+            return {
+                route: route as RouteStack,
+                isValid: permissions.includes(client),
+                isFound: true,
+            };
+        }
+    }
+    return {
+        route: entries[entries.length - 1][0] as RouteStack,
+        isValid: false,
+        isFound: false,
+    };
 }
 
 export const config = {
