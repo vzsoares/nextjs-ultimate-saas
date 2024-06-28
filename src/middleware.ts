@@ -10,6 +10,10 @@ const PartnerHost: Record<string, Clients> = {
     'baz.com': 'baz',
     [process.env.NEXT_PUBLIC_USE_LOCALHOST === 'TRUE' ? 'localhost:3000' : '']:
         'foo',
+    [process.env.NEXT_PUBLIC_USE_LOCALHOST === 'TRUE' ? 'localhost:3001' : '']:
+        'baz',
+    [process.env.NEXT_PUBLIC_USE_LOCALHOST === 'TRUE' ? 'localhost:3002' : '']:
+        'bar',
 };
 
 export type RouteStack = '/index' | '/about' | '/contact' | '/404';
@@ -27,9 +31,18 @@ const BASE_CLIENT = process.env.NEXT_PUBLIC_BASE_CLIENT as Clients;
 const AvClients = BUILD_TYPE === 'INSTANCES' ? [BASE_CLIENT] : ClientsArray;
 
 export function middleware(req: NextRequest) {
-    const reqHost = req.nextUrl.host;
+    const reqHost = req.headers.get('Host') as string;
     const reqPath = req.nextUrl.pathname;
     const url = req.nextUrl.clone();
+    console.log({
+        PartnerHost,
+        reqHost,
+        useLocal: process.env.NEXT_PUBLIC_USE_LOCALHOST,
+        BUILD_TYPE,
+        BASE_CLIENT,
+        req: JSON.stringify(req.nextUrl.host),
+        re: JSON.stringify(req.nextUrl.toJSON()),
+    });
 
     if (reqPath === '/404') return NextResponse.next();
 

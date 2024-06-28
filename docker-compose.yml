@@ -1,31 +1,31 @@
-version: "3.8"
+version: '3.8'
 services:
-  nginx:
-    restart: always
-    build:
-      context: ./.nginx
-      dockerfile: Dockerfile
-      args:
-        IMAGE_NAME_3000: app
-    ports:
-      - "3030:3030"
-      - "3031:3031"
-      - "3032:3032"
-      - "3033:3033"
-      - "3034:3034"
-      - "3035:3035"
-    depends_on:
-      - api
-    networks:
-      - app-network
+    nginx:
+        restart: always
+        build:
+            context: ./.nginx
+            dockerfile: Dockerfile
+            args:
+                IMAGE_NAME_3000: app
+        ports:
+            - '3010:3010'
+            - '3011:3011'
+            - '3012:3012'
+        depends_on:
+            - app
+        networks:
+            - app-network
 
-  app:
-    build:
-      context: ./
-      dockerfile: Dockerfile
-    networks:
-      - app-network
+    app:
+        build:
+            context: ./
+            dockerfile: Dockerfile
+            args:
+                BUILD_TYPE: 'SINGLE'
+                USE_LOCALHOST: 'TRUE'
+        networks:
+            - app-network
 
 networks:
-  app-network:
-    driver: bridge
+    app-network:
+        driver: bridge

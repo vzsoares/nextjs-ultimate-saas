@@ -1,4 +1,4 @@
-FROM nginx:latest
+FROM nginx:1.27
 
 ARG IMAGE_NAME_3000
 ARG IMAGE_NAME_3001

@@ -1,13 +1,13 @@
 ARG PORT="3000"
 
-FROM node:lts-slim as builder
+FROM node:22-slim as builder
 
 WORKDIR /usr/src/app
 
 ARG PORT
 ARG BUILD_TYPE
 ARG BASE_CLIENT
-ARG LOCALHOST="FALSE"
+ARG USE_LOCALHOST="FALSE"
 
 # ensure BUILD_TYPE
 RUN test -n "$BUILD_TYPE"
@@ -18,11 +18,11 @@ RUN if [ "$BUILD_TYPE" = "INSTANCES" ] ; then \
 COPY [".", "./"]
 
 RUN [ -f .env ] && rm .env 2> /dev/null
+RUN touch .env
 
-RUN touch .env && \
-    echo "NEXT_PUBLIC_CLIENT=$CLIENT" >> .env \
-    echo "NEXT_PUBLIC_BASE_CLIENT=$BASE_CLIENT" >> .env \
-    echo "NEXT_PUBLIC_USE_LOCALHOST=$USE_LOCALHOST" >> .env
+ENV NEXT_PUBLIC_BUILD_TYPE=$BUILD_TYPE
+ENV NEXT_PUBLIC_BASE_CLIENT=$BASE_CLIENT
+ENV NEXT_PUBLIC_USE_LOCALHOST=$USE_LOCALHOST
 
 RUN yarn install && yarn next build
 
