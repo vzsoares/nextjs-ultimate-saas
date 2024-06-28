@@ -37,7 +37,9 @@ function HomeFactory(client: Clients) {
                     <MainIllustration />
                 </div>
                 <div>
-                    <p className="text-center pt-4 text-medium text-lg">Seeking innovation</p>
+                    <p className="text-center pt-4 text-medium text-lg">
+                        Seeking innovation
+                    </p>
                 </div>
             </section>
             <footer className="px-4 py-2 w-full max-w-[1080px] bg-primary-500 m-auto">

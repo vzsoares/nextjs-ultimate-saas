@@ -30,13 +30,17 @@ function AboutFactory(client: Clients) {
             </nav>
             <section className="px-4 w-full py-2 max-w-[1080px] m-auto flex-1 flex">
                 <p className="max-w-[480px] text-center m-auto pb-[15%] m-auto">
-                    Knaped almanac night relies god tenaciously nonetheless above all god paradox absolutely
-                    subsequently of perhaps nor so IQ juvenile stoic too besought for grubble reckoned thou youngster
-                    thine hence concludes wharf ridge absolutely juvenile thus whomst thee furthermore my conjure to
-                    summarise night quintessential esteem deprecated verbose in spite my ere incredulous hence exculpate
-                    iconoclastic whomst obviously conjure for my from nonetheless 'tis forsake moreover as or in spite
-                    of campus tidings avaricious reckoned obviously crapulous tenaciously foretold heresy IQ scrutinize
-                    may above all esteem.
+                    Knaped almanac night relies god tenaciously nonetheless
+                    above all god paradox absolutely subsequently of perhaps nor
+                    so IQ juvenile stoic too besought for grubble reckoned thou
+                    youngster thine hence concludes wharf ridge absolutely
+                    juvenile thus whomst thee furthermore my conjure to
+                    summarise night quintessential esteem deprecated verbose in
+                    spite my ere incredulous hence exculpate iconoclastic whomst
+                    obviously conjure for my from nonetheless 'tis forsake
+                    moreover as or in spite of campus tidings avaricious
+                    reckoned obviously crapulous tenaciously foretold heresy IQ
+                    scrutinize may above all esteem.
                 </p>
             </section>
             <footer className="px-4 py-2 w-full max-w-[1080px] bg-primary-500 m-auto">

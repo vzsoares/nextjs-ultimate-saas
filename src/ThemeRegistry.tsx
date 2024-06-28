@@ -5,7 +5,13 @@ import { useServerInsertedHTML } from 'next/navigation';
 import { ClientStrategyContext } from './ClinetInterface';
 import { Clients } from './types';
 
-export default function ThemeRegistryProvider({ children, client }: { children: React.ReactNode; client: Clients }) {
+export default function ThemeRegistryProvider({
+    children,
+    client,
+}: {
+    children: React.ReactNode;
+    client: Clients;
+}) {
     const ClientContext = new ClientStrategyContext(client);
     const palette = ClientContext.palette.primary;
 

@@ -31,7 +31,10 @@ function ContactFactory(client: Clients) {
             <section className="px-4 w-full py-2 max-w-[1080px] m-auto flex-1 flex">
                 <form className="max-w-sm mx-auto w-full m-auto pb-[15%]">
                     <div className="mb-5">
-                        <label htmlFor="email" className="block mb-2 text-sm font-medium text-gray-900">
+                        <label
+                            htmlFor="email"
+                            className="block mb-2 text-sm font-medium text-gray-900"
+                        >
                             Your email
                         </label>
                         <input
@@ -43,7 +46,10 @@ function ContactFactory(client: Clients) {
                         />
                     </div>
                     <div className="mb-5">
-                        <label htmlFor="content" className="block mb-2 text-sm font-medium text-gray-900">
+                        <label
+                            htmlFor="content"
+                            className="block mb-2 text-sm font-medium text-gray-900"
+                        >
                             Content
                         </label>
                         <textarea

@@ -8,7 +8,7 @@ const PartnerHost: Record<string, Clients> = {
     'foo.com': 'foo',
     'bar.com': 'bar',
     'baz.com': 'baz',
-    [process.env.NEXT_PUBLIC_LOCALHOST === 'TRUE' ? 'localhost:3000' : '']:
+    [process.env.NEXT_PUBLIC_USE_LOCALHOST === 'TRUE' ? 'localhost:3000' : '']:
         'foo',
 };
 
