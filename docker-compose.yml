@@ -7,6 +7,8 @@ services:
             dockerfile: Dockerfile
             args:
                 IMAGE_NAME_3000: app
+                IMAGE_NAME_3001: app
+                IMAGE_NAME_3002: app
         ports:
             - '3010:3010'
             - '3011:3011'

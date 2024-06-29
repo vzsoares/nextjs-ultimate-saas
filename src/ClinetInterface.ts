@@ -32,20 +32,6 @@ const FooStrategy: ClientStrategy = {
     redirectMap: {},
 };
 
-const BarStrategy: ClientStrategy = {
-    strategyName: 'bar',
-    palette: {
-        primary: {
-            100: '#fee2e2',
-            200: '#fecaca',
-            300: '#fca5a5',
-            400: '#f87171',
-            500: '#ef4444',
-        },
-    },
-    redirectMap: {},
-};
-
 const BazStrategy: ClientStrategy = {
     strategyName: 'baz',
     palette: {
@@ -60,10 +46,24 @@ const BazStrategy: ClientStrategy = {
     redirectMap: {},
 };
 
+const BarStrategy: ClientStrategy = {
+    strategyName: 'bar',
+    palette: {
+        primary: {
+            100: '#fee2e2',
+            200: '#fecaca',
+            300: '#fca5a5',
+            400: '#f87171',
+            500: '#ef4444',
+        },
+    },
+    redirectMap: {},
+};
+
 const StrategiesMap: Record<Clients, ClientStrategy> = {
     foo: FooStrategy,
-    bar: BarStrategy,
     baz: BazStrategy,
+    bar: BarStrategy,
 };
 
 export class ClientStrategyContext {

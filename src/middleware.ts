@@ -6,8 +6,8 @@ import { Clients } from './types';
 
 const PartnerHost: Record<string, Clients> = {
     'foo.com': 'foo',
-    'bar.com': 'bar',
     'baz.com': 'baz',
+    'bar.com': 'bar',
     [process.env.NEXT_PUBLIC_USE_LOCALHOST === 'TRUE' ? 'localhost:3000' : '']:
         'foo',
     [process.env.NEXT_PUBLIC_USE_LOCALHOST === 'TRUE' ? 'localhost:3001' : '']:

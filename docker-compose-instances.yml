@@ -7,12 +7,12 @@ services:
             dockerfile: Dockerfile
             args:
                 IMAGE_NAME_3000: foo
-                IMAGE_NAME_3001: bar
-                IMAGE_NAME_3002: baz
+                IMAGE_NAME_3001: baz
+                IMAGE_NAME_3002: bar
         ports:
-            - '3000:3000'
-            - '3001:3001'
-            - '3002:3002'
+            - '3010:3010'
+            - '3011:3011'
+            - '3012:3012'
         depends_on:
             - foo
             - bar
@@ -25,32 +25,37 @@ services:
             context: ./
             dockerfile: Dockerfile
             args:
-                CLIENT: foo
-                PORT: 3000
+                BUILD_TYPE: 'INSTANCES'
+                USE_LOCALHOST: 'TRUE'
+                BASE_CLIENT: 'foo'
         expose:
-            - '3000'
+            - '3010'
         networks:
             - app-network
-    bar:
-        build:
-            context: ./
-            dockerfile: Dockerfile
-            args:
-                CLIENT: bar
-                PORT: 3001
-        expose:
-            - '3001'
-        networks:
-            - app-network
+
     baz:
         build:
             context: ./
             dockerfile: Dockerfile
             args:
-                CLIENT: baz
-                PORT: 3002
+                BUILD_TYPE: 'INSTANCES'
+                USE_LOCALHOST: 'TRUE'
+                BASE_CLIENT: 'baz'
         expose:
-            - '3002'
+            - '3011'
+        networks:
+            - app-network
+
+    bar:
+        build:
+            context: ./
+            dockerfile: Dockerfile
+            args:
+                BUILD_TYPE: 'INSTANCES'
+                USE_LOCALHOST: 'TRUE'
+                BASE_CLIENT: 'bar'
+        expose:
+            - '3012'
         networks:
             - app-network
 
