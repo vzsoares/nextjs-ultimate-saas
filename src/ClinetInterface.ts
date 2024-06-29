@@ -33,7 +33,7 @@ const FooStrategy: ClientStrategy = {
 };
 
 const BarStrategy: ClientStrategy = {
-    strategyName: 'foo',
+    strategyName: 'bar',
     palette: {
         primary: {
             100: '#fee2e2',
@@ -47,7 +47,7 @@ const BarStrategy: ClientStrategy = {
 };
 
 const BazStrategy: ClientStrategy = {
-    strategyName: 'foo',
+    strategyName: 'baz',
     palette: {
         primary: {
             100: '#e0f2fe',

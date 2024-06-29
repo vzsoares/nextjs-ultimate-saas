@@ -7,10 +7,10 @@ import { Clients, PageProps } from '@/types';
 export default function Page(p: PageProps) {
     const client = p.params.client;
     ClientSchema.parse(client);
-    return AboutFactory(client);
+    return <AboutFactory client={client} />;
 }
 
-function AboutFactory(client: Clients) {
+function AboutFactory({ client }: { client: Clients }): JSX.Element {
     const ClientContext = new ClientStrategyContext(client);
     return (
         <main className="min-h-screen flex-col flex">
