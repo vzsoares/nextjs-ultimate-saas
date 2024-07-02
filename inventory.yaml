@@ -1,0 +1,6 @@
+myhosts:
+    hosts:
+        localubuntu:
+            ansible_host: 192.168.0.13
+            ansible_user: zaza
+            ansible_password: "{{ lookup('env', 'UBUNTU_PASS') }}"
