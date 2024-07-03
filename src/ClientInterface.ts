@@ -2,6 +2,7 @@ import { RouteStack } from 'src/middleware';
 
 import { Clients } from './types';
 
+const BUILD_TYPE = process.env.NEXT_PUBLIC_BUILD_TYPE as 'INSTANCES' | 'SINGLE';
 type Palette = {
     100: string;
     200: string;
@@ -16,6 +17,20 @@ type ClientStrategy = {
     strategyName: Clients;
     redirectMap: Partial<RedirectMap>;
     palette: ClientPalette;
+};
+
+const DefaultStrategy: ClientStrategy = {
+    strategyName: 'default',
+    palette: {
+        primary: {
+            100: '#000000',
+            200: '#000000',
+            300: '#000000',
+            400: '#000000',
+            500: '#000000',
+        },
+    },
+    redirectMap: {},
 };
 
 const FooStrategy: ClientStrategy = {
@@ -64,6 +79,7 @@ const StrategiesMap: Record<Clients, ClientStrategy> = {
     foo: FooStrategy,
     baz: BazStrategy,
     bar: BarStrategy,
+    default: DefaultStrategy,
 };
 
 export class ClientStrategyContext {
@@ -79,6 +95,7 @@ export class ClientStrategyContext {
     }
 
     public mountRouteUrl(path: string) {
+        if (BUILD_TYPE === 'INSTANCES') return path;
         return `/${this.strategyName}${path}`;
     }
 

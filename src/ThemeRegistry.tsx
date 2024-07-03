@@ -2,7 +2,7 @@
 
 import { useServerInsertedHTML } from 'next/navigation';
 
-import { ClientStrategyContext } from './ClinetInterface';
+import { ClientStrategyContext } from './ClientInterface';
 import { Clients } from './types';
 
 export default function ThemeRegistryProvider({

@@ -1,4 +1,4 @@
-export type Clients = 'foo' | 'bar' | 'baz';
+export type Clients = 'default' | 'foo' | 'bar' | 'baz';
 
 export type LayoutProps<P = object> = {
     params: { client: Clients } & P;

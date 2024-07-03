@@ -1,6 +1,6 @@
 import { NextRequest, NextResponse } from 'next/server';
 
-import { ClientStrategyContext } from './ClinetInterface';
+import { ClientStrategyContext } from './ClientInterface';
 import { ClientsArray } from './schemas';
 import { Clients } from './types';
 
@@ -50,11 +50,11 @@ export function middleware(req: NextRequest) {
         // Instantiate client ctx obj
         const ClientContext = new ClientStrategyContext(client);
 
-        const clientPrefix = `/${client}`;
+        const clientPrefix = BUILD_TYPE === 'INSTANCES' ? '' : `/${client}`;
 
         // handle multiple hosts
         if (PartnerHost[reqHost] !== client) {
-            continue;
+            if (BUILD_TYPE !== 'INSTANCES') continue;
         }
 
         const { route, isFound, isValid } = getRouteStatus({
@@ -77,7 +77,7 @@ export function middleware(req: NextRequest) {
             url.pathname = '/404';
             return NextResponse.redirect(url);
         }
-
+        if (BUILD_TYPE === 'INSTANCES') return NextResponse.next();
         /* mask client in final url using **rewrite**
          * in   `/foo/about`
          * out  `/about`                        */
