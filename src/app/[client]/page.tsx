@@ -1,9 +1,8 @@
 import { HomeFactory } from '@/components/pages/HomeFactory';
-import { ClientSchema } from '@/schemas';
 import { PageProps } from '@/types';
+import ensureClient from '@/utils/ensureClient';
 
 export default function Page(p: PageProps) {
-    const client = p.params.client;
-    ClientSchema.parse(client);
+    const client = ensureClient(p.params.client);
     return <HomeFactory client={client} />;
 }

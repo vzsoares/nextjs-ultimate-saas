@@ -5,7 +5,7 @@ import './globals.css';
 import { Inter } from 'next/font/google';
 
 import ThemeRegistryProvider from '@/ThemeRegistry';
-import { Clients } from '@/types';
+import ensureClient from '@/utils/ensureClient';
 
 const inter = Inter({ subsets: ['latin'] });
 
@@ -13,8 +13,6 @@ export const metadata: Metadata = {
     title: `Nextjs Ultimate SaaS`,
     description: `The SaaS tamplate you needed`,
 };
-
-const BASE_CLIENT = process.env.NEXT_PUBLIC_BASE_CLIENT as Clients;
 
 export default function RootLayout({
     children,
@@ -24,7 +22,7 @@ export default function RootLayout({
     return (
         <html lang="en">
             <body className={inter.className}>
-                <ThemeRegistryProvider client={BASE_CLIENT ?? 'default'}>
+                <ThemeRegistryProvider client={ensureClient()}>
                     {children}
                 </ThemeRegistryProvider>
             </body>

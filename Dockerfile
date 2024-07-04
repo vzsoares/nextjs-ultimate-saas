@@ -1,6 +1,6 @@
 FROM node:22-slim as builder
 
-WORKDIR /usr/src/app
+WORKDIR /app
 
 ARG BUILD_TYPE
 ARG BASE_CLIENT
@@ -25,22 +25,22 @@ RUN yarn install --ignore-scripts --frozen-lockfile && yarn next build
 
 FROM alpine as runner
 
-ENV PORT "3000"
+WORKDIR /app
 
-WORKDIR /usr/src/app
+RUN addgroup --system --gid 1001 nodejs
+RUN adduser --system --uid 1001 nextjs
 
-# COPY --from=builder ["/usr/src/app/yarn.lock", "./"]
-# COPY --from=builder ["/usr/src/app/package.json", "./"]
-# COPY --from=builder ["/usr/src/app/.env", "./"]
-COPY --from=builder ["/usr/src/app/.next", "./.next"]
-COPY --from=builder ["/usr/src/app/node_modules", "./node_modules"]
-# COPY --from=builder ["/usr/src/app/next.config.js", "./"]
-# COPY --from=builder ["/usr/src/app/next-env.d.ts", "./"]
-# COPY --from=builder ["/usr/src/app/src", "./src"]
-# COPY --from=builder ["/usr/src/app/public", "./public"]
+COPY --from=builder /app/public ./public
+COPY --from=builder --chown=nextjs:nodejs /app/.next/standalone ./
+COPY --from=builder --chown=nextjs:nodejs /app/.next/static ./.next/static
 
 RUN apk add --update nodejs npm
 
-# EXPOSE $PORT
+USER nextjs
+ENV NODE_ENV production
+ENV PORT 3000
+EXPOSE 3000
 
-CMD npm start -- -p "${PORT}"
+CMD HOSTNAME="0.0.0.0" node server.js
+
+
