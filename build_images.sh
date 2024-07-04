@@ -17,11 +17,11 @@ CLIENTS=("foo" "bar" "baz")
 echo "building SINGLE image"
 docker build -t next-saas-single:latest --build-arg BUILD_TYPE="SINGLE" --build-arg USE_LOCALHOST="$USE_LOCALHOST" . &
 
-for CLIENT in "${CLIENTS[@]}"; do
-    echo "building INSTANCES $CLIENT image"
-    docker build -t "next-saas-instance-$CLIENT:latest" --build-arg BUILD_TYPE="INSTANCES" --build-arg BASE_CLIENT="$CLIENT" --build-arg USE_LOCALHOST="$USE_LOCALHOST" . &
+# for CLIENT in "${CLIENTS[@]}"; do
+#     echo "building INSTANCES $CLIENT image"
+#     docker build -t "next-saas-instance-$CLIENT:latest" --build-arg BUILD_TYPE="INSTANCES" --build-arg BASE_CLIENT="$CLIENT" --build-arg USE_LOCALHOST="$USE_LOCALHOST" . &
 
-done
+# done
 
 wait
 

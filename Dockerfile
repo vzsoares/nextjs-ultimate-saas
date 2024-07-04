@@ -1,10 +1,7 @@
-ARG PORT="3000"
-
 FROM node:22-slim as builder
 
 WORKDIR /usr/src/app
 
-ARG PORT
 ARG BUILD_TYPE
 ARG BASE_CLIENT
 ARG USE_LOCALHOST="FALSE"
@@ -24,25 +21,23 @@ ENV NEXT_PUBLIC_BUILD_TYPE=$BUILD_TYPE
 ENV NEXT_PUBLIC_BASE_CLIENT=$BASE_CLIENT
 ENV NEXT_PUBLIC_USE_LOCALHOST=$USE_LOCALHOST
 
-RUN yarn install && yarn next build
+RUN yarn install --ignore-scripts --frozen-lockfile && yarn next build
 
 FROM alpine as runner
 
-ARG PORT
-
-ENV PORT ${PORT}
+ENV PORT "3000"
 
 WORKDIR /usr/src/app
 
-COPY --from=builder ["/usr/src/app/yarn.lock", "./"]
-COPY --from=builder ["/usr/src/app/package.json", "./"]
-COPY --from=builder ["/usr/src/app/.env", "./"]
+# COPY --from=builder ["/usr/src/app/yarn.lock", "./"]
+# COPY --from=builder ["/usr/src/app/package.json", "./"]
+# COPY --from=builder ["/usr/src/app/.env", "./"]
 COPY --from=builder ["/usr/src/app/.next", "./.next"]
 COPY --from=builder ["/usr/src/app/node_modules", "./node_modules"]
-COPY --from=builder ["/usr/src/app/next.config.js", "./"]
-COPY --from=builder ["/usr/src/app/next-env.d.ts", "./"]
-COPY --from=builder ["/usr/src/app/src", "./src"]
-COPY --from=builder ["/usr/src/app/public", "./public"]
+# COPY --from=builder ["/usr/src/app/next.config.js", "./"]
+# COPY --from=builder ["/usr/src/app/next-env.d.ts", "./"]
+# COPY --from=builder ["/usr/src/app/src", "./src"]
+# COPY --from=builder ["/usr/src/app/public", "./public"]
 
 RUN apk add --update nodejs npm
 
