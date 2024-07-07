@@ -5,6 +5,9 @@
 DOCKER := docker
 AWS := aws
 
+AWS_ACCOUNT_ID ?= 355738159777
+AWS_REGION ?= us-east-1
+
 BUILD_STRATEGY ?= "SINGLE"
 USE_LOCALHOST ?= "TRUE"
 BASE_IMAGE_NAME ?= "next-saas"
@@ -67,15 +70,15 @@ push:
         fi
 
 push-single:
-> @${AWS} ecr get-login-password --region us-east-1 | docker login --username AWS --password-stdin 355738159777.dkr.ecr.us-east-1.amazonaws.com
-> @${DOCKER} tag next-saas-single:latest 355738159777.dkr.ecr.us-east-1.amazonaws.com/next-saas/single:latest
-> @${DOCKER} push 355738159777.dkr.ecr.us-east-1.amazonaws.com/next-saas/single:latest
+> @${AWS} ecr get-login-password --region ${AWS_REGION} | docker login --username AWS --password-stdin ${AWS_ACCOUNT_ID}.dkr.ecr.${AWS_REGION}.amazonaws.com
+> @${DOCKER} tag ${BASE_IMAGE_NAME}-single:latest ${AWS_ACCOUNT_ID}.dkr.ecr.${AWS_REGION}.amazonaws.com/${BASE_IMAGE_NAME}/single:latest
+> @${DOCKER} push ${AWS_ACCOUNT_ID}.dkr.ecr.${AWS_REGION}.amazonaws.com/${BASE_IMAGE_NAME}/single:latest
 
 push-instances:
 > ${MAKE} ${MAKEOPTS} $(foreach client,${CLIENTS}, push-instance-${client})
 
 push-instance-%:
-> @${AWS} ecr get-login-password --region us-east-1 | ${DOCKER} login --username AWS --password-stdin 355738159777.dkr.ecr.us-east-1.amazonaws.com
-> @${DOCKER} tag next-saas-instance-$*:latest 355738159777.dkr.ecr.us-east-1.amazonaws.com/next-saas/instance-$*:latest
-> @${DOCKER} push 355738159777.dkr.ecr.us-east-1.amazonaws.com/next-saas/instance-$*:latest
+> @${AWS} ecr get-login-password --region ${AWS_REGION} | ${DOCKER} login --username AWS --password-stdin ${AWS_ACCOUNT_ID}.dkr.ecr.${AWS_REGION}.amazonaws.com
+> @${DOCKER} tag ${BASE_IMAGE_NAME}-instance-$*:latest ${AWS_ACCOUNT_ID}.dkr.ecr.${AWS_REGION}.amazonaws.com/${BASE_IMAGE_NAME}/instance-$*:latest
+> @${DOCKER} push ${AWS_ACCOUNT_ID}.dkr.ecr.${AWS_REGION}.amazonaws.com/${BASE_IMAGE_NAME}/instance-$*:latest
 
