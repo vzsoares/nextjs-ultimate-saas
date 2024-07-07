@@ -3,6 +3,7 @@
 .DEFAULT_GOAL := default
 
 DOCKER := docker
+AWS := aws
 
 BUILD_STRATEGY ?= "SINGLE"
 USE_LOCALHOST ?= "TRUE"
@@ -55,4 +56,26 @@ run-instance-%:
 stop:
 > @${DOCKER} container stop ${BASE_IMAGE_NAME}-single $(foreach client,${CLIENTS}, ${BASE_IMAGE_NAME}-instance-${client}) &>2; \
     ${DOCKER} container rm -f ${BASE_IMAGE_NAME}-single $(foreach client,${CLIENTS}, ${BASE_IMAGE_NAME}-instance-${client}) &>2
+
+push:
+> @if [ "${BUILD_STRATEGY}" = "INSTANCES" ]; then\
+        ${MAKE} ${MAKEOPTS} push-instances;\
+        elif [ "${BUILD_STRATEGY}" = "SINGLE" ]; then\
+        ${MAKE} ${MAKEOPTS} push-single;\
+        else\
+        echo "NO BUILD STRATEGY SET" && exit 1;\
+        fi
+
+push-single:
+> @${AWS} ecr get-login-password --region us-east-1 | docker login --username AWS --password-stdin 355738159777.dkr.ecr.us-east-1.amazonaws.com
+> @${DOCKER} tag next-saas-single:latest 355738159777.dkr.ecr.us-east-1.amazonaws.com/next-saas/single:latest
+> @${DOCKER} push 355738159777.dkr.ecr.us-east-1.amazonaws.com/next-saas/single:latest
+
+push-instances:
+> ${MAKE} ${MAKEOPTS} $(foreach client,${CLIENTS}, push-instance-${client})
+
+push-instance-%:
+> @${AWS} ecr get-login-password --region us-east-1 | ${DOCKER} login --username AWS --password-stdin 355738159777.dkr.ecr.us-east-1.amazonaws.com
+> @${DOCKER} tag next-saas-instance-$*:latest 355738159777.dkr.ecr.us-east-1.amazonaws.com/next-saas/instance-$*:latest
+> @${DOCKER} push 355738159777.dkr.ecr.us-east-1.amazonaws.com/next-saas/instance-$*:latest
 
