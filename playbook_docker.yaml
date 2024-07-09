@@ -1,5 +1,130 @@
-- name: Ensure docker
+- name: Ping test
   hosts: '{{ HOST }}'
   tasks:
       - name: Ping my hosts
         ansible.builtin.ping:
+
+- name: Update instance image
+  hosts: '{{ HOST }}'
+  become: true
+
+  vars:
+      AWS_ACCESS_KEY_ID: "{{ lookup('env', 'AWS_ACCESS_KEY_ID') }}"
+      AWS_SECRET_ACCESS_KEY: "{{ lookup('env', 'AWS_SECRET_ACCESS_KEY') }}"
+      AWS_REGION: "{{ lookup('env', 'AWS_REGION') }}"
+      AWS_ACCOUNT_ID: "{{ lookup('env', 'AWS_ACCOUNT_ID') }}"
+      REGISTRY_URL: '{{ AWS_ACCOUNT_ID }}.dkr.ecr.{{ AWS_REGION }}.amazonaws.com'
+
+  tasks:
+      ##### setup group and user
+
+      - name: create docker group
+        become: true
+        group:
+            name: docker
+            state: present
+
+      - name: add user to group
+        become: true
+        user:
+            name: '{{ansible_user}}'
+            groups: docker
+            append: true
+
+      - meta: reset_connection # <--- must do this if using pipelining
+
+      ##### setup docker
+
+      - name: install packages required by docker
+        become: true
+        apt:
+            update_cache: yes
+            state: latest
+            name:
+                - apt-transport-https
+                - ca-certificates
+                - curl
+                - gpg-agent
+                - software-properties-common
+
+      - name: add docker GPG key
+        become: true
+        apt_key:
+            url: https://download.docker.com/linux/ubuntu/gpg
+            state: present
+
+      - name: add docker apt repo
+        become: true
+        apt_repository:
+            repo: deb https://download.docker.com/linux/ubuntu bionic stable
+            state: present
+
+      - name: install docker
+        become: true
+        apt:
+            update_cache: yes
+            state: latest
+            name:
+                - docker-ce
+                - docker-ce-cli
+                - containerd.io
+
+      ##### setup ansible <---> docker
+
+      - name: install python dependencies
+        become: true
+        apt:
+            update_cache: yes
+            state: latest
+            name: python3-pip
+
+      - name: install 'Docker SDK for Python'
+        pip:
+            break_system_packages: true
+            name: docker
+      # end setup docker
+
+      - name: ensure unzip
+        apt:
+            name: unzip
+            state: latest
+            # update_cache: yes
+
+      - name: register aws
+        shell: command -v aws
+        register: AWS_CLI
+
+      - name: add aws cli
+        become: true
+        shell: curl "https://awscli.amazonaws.com/awscli-exe-linux-x86_64.zip" -o "awscliv2.zip" && unzip awscliv2.zip && ./aws/install
+        when: AWS_CLI.stdout == ""
+
+      - name: Get AWS ECR password
+        environment:
+            AWS_ACCESS_KEY_ID: '{{ AWS_ACCESS_KEY_ID }}'
+            AWS_SECRET_ACCESS_KEY: '{{ AWS_SECRET_ACCESS_KEY }}'
+        ansible.builtin.shell: aws ecr get-login-password --region "{{ AWS_REGION }}"
+        register: ECR_PASS
+        # ignore_errors: true
+
+      - name: Log into private registry and force re-authorization
+        community.docker.docker_login:
+            registry_url: '{{ REGISTRY_URL }}'
+            username: AWS
+            password: '{{ ECR_PASS.stdout }}'
+            reauthorize: true
+      - name: Pull an image
+        community.docker.docker_image_pull:
+            name: '{{ REGISTRY_URL }}/next-saas/single'
+      - name: Re-create container
+        community.docker.docker_container:
+            name: next-saas-single
+            image: '{{ REGISTRY_URL }}/next-saas/single'
+            state: present
+            restart: true
+            recreate: true
+            publish_all_ports: true
+            published_ports:
+                - 8080:3000
+            exposed_ports:
+                - 3000
