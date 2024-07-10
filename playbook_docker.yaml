@@ -81,7 +81,10 @@
       - name: install 'Docker SDK for Python'
         pip:
             break_system_packages: true
-            name: docker
+            name:
+                - docker
+                - requests
+                - pyOpenSSL
       # end setup docker
 
       - name: ensure unzip
@@ -121,10 +124,17 @@
             name: next-saas-single
             image: '{{ REGISTRY_URL }}/next-saas/single'
             state: present
-            restart: true
+            # restart: true
+            detach: true
+            restart_policy: always
             recreate: true
-            publish_all_ports: true
-            published_ports:
-                - 8080:3000
-            exposed_ports:
+            # container_default_behavior: compatibility
+            # network_mode: default
+            # networks_cli_compatible: false
+            # networks:
+            #     - name: bridge
+            expose:
                 - 3000
+            # publish_all_ports: true
+            ports:
+                - '32769:3000'
