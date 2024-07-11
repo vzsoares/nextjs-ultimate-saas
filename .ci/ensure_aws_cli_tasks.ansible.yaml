@@ -1,0 +1,14 @@
+- name: register aws
+  shell: command -v aws
+  register: AWS_CLI
+- name: Ensure aws cli
+  when: AWS_CLI.stdout == ""
+  block:
+      - name: ensure unzip
+        apt:
+            name: unzip
+            state: latest
+
+      - name: add aws cli
+        become: true
+        shell: curl "https://awscli.amazonaws.com/awscli-exe-linux-x86_64.zip" -o "awscliv2.zip" && unzip awscliv2.zip && ./aws/install

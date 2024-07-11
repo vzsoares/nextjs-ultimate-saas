@@ -20,19 +20,9 @@
         ansible.builtin.include_tasks:
             file: ensure_docker_tasks.ansible.yaml
 
-      - name: ensure unzip
-        apt:
-            name: unzip
-            state: latest
-
-      - name: register aws
-        shell: command -v aws
-        register: AWS_CLI
-
-      - name: add aws cli
-        become: true
-        shell: curl "https://awscli.amazonaws.com/awscli-exe-linux-x86_64.zip" -o "awscliv2.zip" && unzip awscliv2.zip && ./aws/install
-        when: AWS_CLI.stdout == ""
+      - name: Ensure aws cli
+        ansible.builtin.include_tasks:
+            file: ensure_aws_cli_tasks.ansible.yaml
 
       - name: Get AWS ECR password
         environment:
@@ -40,7 +30,6 @@
             AWS_SECRET_ACCESS_KEY: '{{ AWS_SECRET_ACCESS_KEY }}'
         ansible.builtin.shell: aws ecr get-login-password --region "{{ AWS_REGION }}"
         register: ECR_PASS
-        # ignore_errors: true
 
       - name: Log into private registry and force re-authorization
         community.docker.docker_login:
@@ -48,9 +37,11 @@
             username: AWS
             password: '{{ ECR_PASS.stdout }}'
             reauthorize: true
-      - name: Pull an image
+
+      - name: Pull image
         community.docker.docker_image_pull:
             name: '{{ REGISTRY_URL }}/next-saas/single'
+
       - name: Re-create container
         community.docker.docker_container:
             name: next-saas-single
