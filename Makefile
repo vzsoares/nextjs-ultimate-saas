@@ -82,3 +82,5 @@ push-instance-%:
 > @${DOCKER} tag ${BASE_IMAGE_NAME}-instance-$*:latest ${AWS_ACCOUNT_ID}.dkr.ecr.${AWS_REGION}.amazonaws.com/${BASE_IMAGE_NAME}/instance-$*:latest
 > @${DOCKER} push ${AWS_ACCOUNT_ID}.dkr.ecr.${AWS_REGION}.amazonaws.com/${BASE_IMAGE_NAME}/instance-$*:latest
 
+deploy:
+> ansible-playbook -i .ci/inventory.ansible.yaml .ci/playbook_docker.ansible.yaml --extra-vars "HOST=localubuntu"

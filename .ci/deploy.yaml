@@ -1,0 +1,29 @@
+# yaml-language-server: $schema=https://raw.githubusercontent.com/SchemaStore/schemastore/master/src/schemas/json/github-workflow.json
+
+name: Deploy
+
+on: [release]
+
+jobs:
+    deploy:
+        env:
+            GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
+        name: Run Type Check & Linters
+        runs-on: ubuntu-latest
+
+        steps:
+            - name: Checkout repository
+              uses: actions/checkout@v4
+
+            - name: Install pipx
+              run: sudo apt update \
+                  sudo apt install pipx \
+                  pipx ensurepath \
+                  sudo pipx ensurepath --global
+
+            - name: Install ansible
+              run: pipx install --include-deps ansible
+
+            - name: Deploy
+              run: make deploy
