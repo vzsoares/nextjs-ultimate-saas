@@ -14,8 +14,8 @@
       AWS_REGION: "{{ lookup('env', 'AWS_REGION') }}"
       AWS_ACCOUNT_ID: "{{ lookup('env', 'AWS_ACCOUNT_ID') }}"
       REGISTRY_URL: '{{ AWS_ACCOUNT_ID }}.dkr.ecr.{{ AWS_REGION }}.amazonaws.com'
-      CONTAINER_IMAGE_NAME: next-saas-single
-      IMAGE_NAME: next-saas/single
+      CONTAINER_IMAGE_NAME: "{{ lookup('env', 'CONTAINER_IMAGE_NAME') }}"
+      IMAGE_NAME: "{{ lookup('env', 'IMAGE_NAME') }}"
 
   tasks:
       - name: Ensure docker
