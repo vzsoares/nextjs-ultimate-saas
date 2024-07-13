@@ -31,6 +31,7 @@ jobs:
               run: |
                   touch ~/.ansible_key
                   echo "${{ secrets.SSH_KEY  }}" >> ~/.ansible_key
+                  chmod 400 ~/.ansible_key
 
             - name: Deploy
               env:
