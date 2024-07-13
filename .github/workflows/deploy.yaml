@@ -11,6 +11,7 @@ jobs:
 
         name: Deploy
         runs-on: ubuntu-latest
+        environment: deploy_env
 
         steps:
             - name: Checkout repository
