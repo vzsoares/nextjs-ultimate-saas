@@ -1,6 +1,7 @@
 - name: Register should ensure docker
   shell: command -v docker
   register: DOCKER_CLI
+  ignore_errors: true
 - name: Ensure Docker
   when: DOCKER_CLI.stdout == ''
   block:

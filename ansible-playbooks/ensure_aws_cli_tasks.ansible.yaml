@@ -1,6 +1,7 @@
 - name: register aws
   shell: command -v aws
   register: AWS_CLI
+  ignore_errors: true
 - name: Ensure aws cli
   when: AWS_CLI.stdout == ""
   block:
