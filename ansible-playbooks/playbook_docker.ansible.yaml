@@ -1,11 +1,11 @@
 - name: Ping test
-  hosts: '{{ HOST }}'
+  hosts: "{{ lookup('env', 'HOST') }}"
   tasks:
       - name: Ping my hosts
         ansible.builtin.ping:
 
 - name: Update instance image
-  hosts: '{{ HOST }}'
+  hosts: "{{ lookup('env', 'HOST') }}"
   become: true
 
   vars:

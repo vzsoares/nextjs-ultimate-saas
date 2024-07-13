@@ -83,4 +83,16 @@ push-instance-%:
 > @${DOCKER} push ${AWS_ACCOUNT_ID}.dkr.ecr.${AWS_REGION}.amazonaws.com/${BASE_IMAGE_NAME}/instance-$*:latest
 
 deploy:
-> ansible-playbook -i .ci/inventory.ansible.yaml .ci/playbook_docker.ansible.yaml --extra-vars "HOST=localubuntu"
+> ansible-playbook -i ansible-playbooks/inventory.ansible.yaml ansible-playbooks/playbook_docker.ansible.yaml --private-key="~/.ansible_key"
+
+deploy-local:
+>   @source ./.env ;\
+    export UBUNTU_PASS ;\
+    export AWS_REGION ;\
+    export AWS_ACCOUNT_ID ;\
+    export AWS_ACCESS_KEY_ID ;\
+    export AWS_SECRET_ACCESS_KEY ;\
+    export CONTAINER_IMAGE_NAME ;\
+    export IMAGE_NAME ;\
+    export HOST=localubuntu ;\
+    ansible-playbook -i ansible-playbooks/inventory.ansible.yaml ansible-playbooks/playbook_docker.ansible.yaml -vvv
