@@ -49,7 +49,7 @@
         community.docker.docker_container:
             name: "{{ CONTAINER_IMAGE_NAME }}"
             image: "{{ REGISTRY_URL }}/{{ IMAGE_NAME }}"
-            state: present
+            state: started
             detach: true
             restart_policy: always
             recreate: true
