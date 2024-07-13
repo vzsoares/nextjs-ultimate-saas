@@ -1,4 +1,6 @@
 # fak yo TABs
+export
+include .env
 .RECIPEPREFIX := >
 .DEFAULT_GOAL := default
 
