@@ -45,7 +45,6 @@
             name: '{{ REGISTRY_URL }}/{{ IMAGE_NAME }}'
 
       - name: Re-create container
-        become: true
         community.docker.docker_container:
             name: "{{ CONTAINER_IMAGE_NAME }}"
             image: "{{ REGISTRY_URL }}/{{ IMAGE_NAME }}"
