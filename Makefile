@@ -85,7 +85,7 @@ push-instance-%:
 > @${DOCKER} push ${AWS_ACCOUNT_ID}.dkr.ecr.${AWS_REGION}.amazonaws.com/${BASE_IMAGE_NAME}/instance-$*:latest
 
 deploy:
-> ansible-playbook -i ansible-playbooks/inventory.ansible.yaml ansible-playbooks/playbook_docker.ansible.yaml --private-key="~/.ansible_key"
+> ansible-playbook -i ansible-playbooks/inventory.ansible.yaml ansible-playbooks/playbook_docker.ansible.yaml --private-key ~/.ansible_key
 
 deploy-local:
 >   @source ./.env ;\
