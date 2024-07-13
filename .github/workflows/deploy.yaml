@@ -30,7 +30,7 @@ jobs:
             - name: Create ssh key file
               run: |
                   touch ~/.ansible_key
-                  echo ${{ secrets.SSH_KEY  }} >> ~/.ansible_key
+                  echo "${{ secrets.SSH_KEY  }}" >> ~/.ansible_key
 
             - name: Deploy
               env:
