@@ -28,7 +28,7 @@ jobs:
               run: pipx install --include-deps ansible
 
             - name: Install aws
-              run: pipx instlal awscli
+              run: pipx install awscli
 
             - name: Create ssh key file
               run: |
@@ -46,7 +46,7 @@ jobs:
                   INSTANCE_NAME: next-saas
               run: |
                   PUBLIC_IP=$(make get-instance-ip)
-                  echo "HOST_IP=$PUBLIC_IP" >> $GITHUB_OUTPUT
+                  echo "HOST_IP=$PUBLIC_IP" >> "$GITHUB_OUTPUT"
 
             - name: Deploy
               env:
