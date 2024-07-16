@@ -88,16 +88,7 @@ deploy:
 > ansible-playbook -i ansible-playbooks/inventory.ansible.yaml ansible-playbooks/playbook_docker.ansible.yaml --private-key ~/.ansible_key
 
 deploy-local:
->   @source ./.env ;\
-    export UBUNTU_PASS ;\
-    export AWS_REGION ;\
-    export AWS_ACCOUNT_ID ;\
-    export AWS_ACCESS_KEY_ID ;\
-    export AWS_SECRET_ACCESS_KEY ;\
-    export CONTAINER_IMAGE_NAME ;\
-    export IMAGE_NAME ;\
-    export HOST=localubuntu ;\
-    ansible-playbook -i ansible-playbooks/inventory.ansible.yaml ansible-playbooks/playbook_docker.ansible.yaml -vvv
+> ansible-playbook -i ansible-playbooks/inventory.ansible.yaml ansible-playbooks/playbook_docker.ansible.yaml -vvv
 
 get-instance-ip:
 > @aws lightsail get-instances --region "${AWS_REGION}" --query "instances[?name == '${INSTANCE_NAME}'].publicIpAddress" --output text | cat
