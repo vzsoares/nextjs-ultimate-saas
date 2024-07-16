@@ -98,3 +98,6 @@ deploy-local:
     export IMAGE_NAME ;\
     export HOST=localubuntu ;\
     ansible-playbook -i ansible-playbooks/inventory.ansible.yaml ansible-playbooks/playbook_docker.ansible.yaml -vvv
+
+get-instance-ip:
+> @aws lightsail get-instances --query "instances[?name == '${INSTANCE_NAME}'].publicIpAddress" --output text | cat

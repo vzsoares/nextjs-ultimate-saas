@@ -27,11 +27,26 @@ jobs:
             - name: Install ansible
               run: pipx install --include-deps ansible
 
+            - name: Install aws
+              run: pipx instlal awscli
+
             - name: Create ssh key file
               run: |
                   touch ~/.ansible_key
                   echo "${{ secrets.SSH_KEY }}" >> ~/.ansible_key
                   chmod 400 ~/.ansible_key
+
+            - name: Get instance public ip
+              id: get-instance-ip
+              env:
+                  AWS_REGION: ${{ secrets.AWS_REGION }}
+                  AWS_ACCOUNT_ID: ${{ secrets.AWS_ACCOUNT_ID }}
+                  AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
+                  AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+                  INSTANCE_NAME: next-saas
+              run: |
+                  PUBLIC_IP=$(make get-instance-ip)
+                  echo "HOST_IP=$PUBLIC_IP" >> $GITHUB_OUTPUT
 
             - name: Deploy
               env:
@@ -42,4 +57,5 @@ jobs:
                   CONTAINER_IMAGE_NAME: ${{ secrets.CONTAINER_IMAGE_NAME }}
                   IMAGE_NAME: ${{ secrets.IMAGE_NAME }}
                   HOST: ${{ secrets.HOST }}
+                  HOST_IP: ${{ steps.get-instance-ip.outputs.HOST_IP }}
               run: make deploy

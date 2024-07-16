@@ -8,6 +8,6 @@ local:
 prod:
     hosts:
         ec2-us-east-1-101:
-            ansible_host: 3.218.153.101
+            ansible_host: "{{ lookup('env', 'HOST_IP') }}"
             ansible_user: ubuntu
             ansible_ssh_common_args: '-o StrictHostKeyChecking=no'
