@@ -90,5 +90,5 @@ deploy:
 deploy-local:
 > ansible-playbook -i ansible-playbooks/inventory.ansible.yaml ansible-playbooks/playbook_docker.ansible.yaml -vvv
 
-get-instance-ip:
-> @aws lightsail get-instances --region "${AWS_REGION}" --query "instances[?name == '${INSTANCE_NAME}'].publicIpAddress" --output text | cat
+get-ec2-instance-public-ip:
+> @aws --region "${AWS_REGION}" ec2 describe-instances --instance-ids "${INSTANCE_ID}" --query "Reservations[*].Instances[*].PublicIpAddress" --output text | cat
