@@ -10,10 +10,3 @@ jobs:
             IMAGE_NAME: 'next-saas-single'
             CONTAINER_IMAGE_NAME: 'next-saas/single'
             EC2_INSTANCE_ID: 'i-005426616970b401e'
-        secrets:
-            SSH_KEY: ${{ secrets.SSH_KEY }}
-            AWS_REGION: ${{ secrets.AWS_REGION }}
-            AWS_ACCOUNT_ID: ${{ secrets.AWS_ACCOUNT_ID }}
-            AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
-            AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
-            HOST: ${{ secrets.HOST }}
