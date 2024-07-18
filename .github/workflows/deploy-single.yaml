@@ -4,7 +4,7 @@ on: [workflow_dispatch]
 
 jobs:
     call-deploy-workflow:
-        uses: ./deploy.yaml
+        uses: ./.github/workflows/deploy.yaml
         with:
             IMAGE_NAME: 'next-saas-single'
             CONTAINER_IMAGE_NAME: 'next-saas/single'
