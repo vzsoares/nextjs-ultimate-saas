@@ -1,0 +1,19 @@
+plugin: aws_ec2
+cache: true
+cache_plugin: jsonfile
+cache_timeout: 7200
+cache_connection: /tmp/aws_inventory
+cache_prefix: aws_ec2
+
+compose:
+    ansible_user: '"ubuntu"'
+    ansible_ssh_common_args: '-o StrictHostKeyChecking=no'
+filters:
+    instance-state-name: running
+    tag:Domain:
+        - 'next-saas'
+keyed_groups:
+    - key: tags.get('Domain', 'unknown') + "_" + tags.get('Type', 'unknown') + "_" + tags.get('Client', 'unknown')
+      separator: ''
+    - key: tags.get('Domain', 'unknown') + "_" + tags.get('Type', 'unknown')
+      separator: ''

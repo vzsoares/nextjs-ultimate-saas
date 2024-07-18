@@ -14,7 +14,7 @@ on:
             CONTAINER_IMAGE_NAME:
                 type: string
                 required: true
-            EC2_INSTANCE_ID:
+            HOST_NAME:
                 type: string
                 required: true
         secrets:
@@ -27,8 +27,6 @@ on:
             AWS_ACCESS_KEY_ID:
                 required: true
             AWS_SECRET_ACCESS_KEY:
-                required: true
-            HOST:
                 required: true
 
 jobs:
@@ -81,8 +79,7 @@ jobs:
                   AWS_ACCOUNT_ID: ${{ secrets.AWS_ACCOUNT_ID }}
                   AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
                   AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
-                  HOST: ${{ secrets.HOST }}
+                  HOST_NAME: ${{ inputs.HOST_NAME }}
                   CONTAINER_IMAGE_NAME: ${{ inputs.CONTAINER_IMAGE_NAME }}
                   IMAGE_NAME: ${{ inputs.IMAGE_NAME }}
-                  HOST_IP: ${{ steps.get-instance-ip.outputs.HOST_IP }}
-              run: make deploy
+              run: make deploy-ec2
