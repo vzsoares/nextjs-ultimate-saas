@@ -5,6 +5,9 @@ name: Reusable Deploy
 on:
     workflow_call:
         inputs:
+            ENVIRONMENT:
+                type: string
+                required: true
             IMAGE_NAME:
                 type: string
                 required: true
