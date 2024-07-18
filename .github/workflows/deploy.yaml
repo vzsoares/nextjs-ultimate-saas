@@ -15,8 +15,6 @@ on:
                 type: string
                 required: true
         secrets:
-            GITHUB_TOKEN:
-                required: true
             SSH_KEY:
                 required: true
             AWS_REGION:
