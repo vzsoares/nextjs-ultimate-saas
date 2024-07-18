@@ -6,6 +6,7 @@ jobs:
     call-deploy-workflow:
         uses: ./.github/workflows/deploy.yaml
         with:
+            ENVIRONMENT: 'deploy_env'
             IMAGE_NAME: 'next-saas-single'
             CONTAINER_IMAGE_NAME: 'next-saas/single'
             EC2_INSTANCE_ID: 'i-005426616970b401e'

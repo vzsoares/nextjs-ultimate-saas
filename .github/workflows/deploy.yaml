@@ -14,19 +14,6 @@ on:
             EC2_INSTANCE_ID:
                 type: string
                 required: true
-        secrets:
-            SSH_KEY:
-                required: true
-            AWS_REGION:
-                required: true
-            AWS_ACCOUNT_ID:
-                required: true
-            AWS_ACCESS_KEY_ID:
-                required: true
-            AWS_SECRET_ACCESS_KEY:
-                required: true
-            HOST:
-                required: true
 
 jobs:
     deploy:
@@ -35,6 +22,7 @@ jobs:
 
         name: Deploy
         runs-on: ubuntu-latest
+        environment: ${{ inputs.ENVIRONMENT }}
 
         steps:
             - name: Checkout repository
