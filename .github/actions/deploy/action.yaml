@@ -7,9 +7,6 @@ inputs:
     IMAGE_NAME:
         description: string
         required: true
-    CONTAINER_IMAGE_NAME:
-        description: string
-        required: true
     SSH_KEYDIR:
         description: string
         required: true
