@@ -6,6 +6,7 @@ jobs:
     build:
         name: build and push to ecr
         runs-on: ubuntu-latest
+        environment: prod
         steps:
             - name: checkout repository
               uses: actions/checkout@v4
