@@ -18,10 +18,10 @@ jobs:
             - name: Create ssh key file
               shell: bash
               run: |
-                  mkdir -p ~/.ssh
-                  touch ~/.ssh/${DEPLOYMENT_NAME}
-                  echo "${{ secrets.SSH_KEY }}" >> ~/${DEPLOYMENT_NAME}
-                  chmod 400 ~/.ssh/${DEPLOYMENT_NAME}
+                  mkdir -p "$HOME/.ssh"
+                  touch "$HOME/.ssh/${DEPLOYMENT_NAME}"
+                  echo "${{ secrets.SSH_KEY }}" >> "$HOME/.ssh/${DEPLOYMENT_NAME}"
+                  chmod 400 "$HOME/.ssh/${DEPLOYMENT_NAME}"
             - name: deploy
               uses: ./.github/actions/deploy
               with:
