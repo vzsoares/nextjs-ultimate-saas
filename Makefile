@@ -17,6 +17,8 @@ IMAGE_TAG ?= "latest"
 
 CLIENTS := foo bar baz
 
+export ANSIBLE_CONFIG="$(pwd)/ansible-playbooks/ansible.cfg"
+
 default:
 > @echo "Please select a method" && exit 1
 
