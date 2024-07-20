@@ -16,7 +16,7 @@ jobs:
               uses: actions/checkout@v4
 
             - name: Create ssh key file
-              uses: ./.github/action/touch_file_with_content
+              uses: ./.github/actions/touch_file_with_content
               with:
                   BASE_PATH: ${HOME}
                   FILE_NAME: ${DEPLOYMENT_NAME}
