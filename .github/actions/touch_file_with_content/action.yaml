@@ -1,0 +1,26 @@
+# yaml-language-server: $schema=https://raw.githubusercontent.com/SchemaStore/schemastore/master/src/schemas/json/github-action.json
+
+name: touch file with content
+description: touch file with content
+
+inputs:
+    BASE_PATH:
+        description: string
+        required: true
+    FILE_NAME:
+        description: string
+        required: true
+    CONTENT:
+        description: string
+        required: true
+
+runs:
+    using: 'composite'
+    steps:
+        - name: create file
+          shell: bash
+          run: |
+              mkdir -p "${{ inputs.BASE_PATH }}"
+              touch "${{ inputs.BASE_PATH }}/${{ inputs.FILE_NAME }}"
+              echo "${{ inputs.CONTENT }}" >> "${{ inputs.BASE_PATH }}/${{ inputs.FILE_NAME }}"
+              chmod 400 "${{ inputs.BASE_PATH }}/${{ inputs.FILE_NAME }}"

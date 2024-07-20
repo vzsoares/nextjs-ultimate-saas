@@ -46,30 +46,6 @@ runs:
               pipx install --include-deps ansible botocore boto3 --force
               pipx inject ansible botocore boto3
 
-        # - name: Install aws
-        #   shell: bash
-        #   run: pipx install awscli
-
-        # - name: Create ssh key file
-        #   shell: bash
-        #   run: |
-        #       touch ~/.ansible_key
-        #       echo "${{ inputs.SSH_KEY }}" >> ~/.ansible_key
-        #       chmod 400 ~/.ansible_key
-
-        # - name: Get instance public ip
-        #   shell: bash
-        #   id: get-instance-ip
-        #   env:
-        #       AWS_REGION: ${{ inputs.AWS_REGION }}
-        #       AWS_ACCOUNT_ID: ${{ inputs.AWS_ACCOUNT_ID }}
-        #       AWS_ACCESS_KEY_ID: ${{ inputs.AWS_ACCESS_KEY_ID }}
-        #       AWS_SECRET_ACCESS_KEY: ${{ inputs.AWS_SECRET_ACCESS_KEY }}
-        #       INSTANCE_ID: ${{ inputs.EC2_INSTANCE_ID }}
-        #   run: |
-        #       PUBLIC_IP=$(make get-ec2-instance-public-ip)
-        #       echo "HOST_IP=$PUBLIC_IP" >> "$GITHUB_OUTPUT"
-
         - name: Deploy
           shell: bash
           env:
@@ -78,7 +54,6 @@ runs:
               AWS_ACCESS_KEY_ID: ${{ inputs.AWS_ACCESS_KEY_ID }}
               AWS_SECRET_ACCESS_KEY: ${{ inputs.AWS_SECRET_ACCESS_KEY }}
               HOST_NAME: ${{ inputs.HOST_NAME }}
-              CONTAINER_IMAGE_NAME: ${{ inputs.CONTAINER_IMAGE_NAME }}
               IMAGE_NAME: ${{ inputs.IMAGE_NAME }}
               SSH_KEYDIR: ${{ inputs.SSH_KEYDIR }}
           run: make deploy-ec2

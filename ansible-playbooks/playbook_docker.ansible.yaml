@@ -4,56 +4,56 @@
       - name: Ping my hosts
         ansible.builtin.ping:
 
-# - name: Update instance image
-#   hosts: "{{ lookup('env', 'HOST_NAME') }}"
-#   become: true
+- name: Update instance image
+  hosts: "{{ lookup('env', 'HOST_NAME') }}"
+  become: true
 
-#   vars:
-#       AWS_ACCESS_KEY_ID: "{{ lookup('env', 'AWS_ACCESS_KEY_ID') }}"
-#       AWS_SECRET_ACCESS_KEY: "{{ lookup('env', 'AWS_SECRET_ACCESS_KEY') }}"
-#       AWS_REGION: "{{ lookup('env', 'AWS_REGION') }}"
-#       AWS_ACCOUNT_ID: "{{ lookup('env', 'AWS_ACCOUNT_ID') }}"
-#       REGISTRY_URL: '{{ AWS_ACCOUNT_ID }}.dkr.ecr.{{ AWS_REGION }}.amazonaws.com'
-#       CONTAINER_IMAGE_NAME: "{{ lookup('env', 'CONTAINER_IMAGE_NAME') }}"
-#       IMAGE_NAME: "{{ lookup('env', 'IMAGE_NAME') }}"
+  vars:
+      AWS_ACCESS_KEY_ID: "{{ lookup('env', 'AWS_ACCESS_KEY_ID') }}"
+      AWS_SECRET_ACCESS_KEY: "{{ lookup('env', 'AWS_SECRET_ACCESS_KEY') }}"
+      AWS_REGION: "{{ lookup('env', 'AWS_REGION') }}"
+      AWS_ACCOUNT_ID: "{{ lookup('env', 'AWS_ACCOUNT_ID') }}"
+      REGISTRY_URL: '{{ AWS_ACCOUNT_ID }}.dkr.ecr.{{ AWS_REGION }}.amazonaws.com'
+      CONTAINER_IMAGE_NAME: "{{ lookup('env', 'HOST_NAME') }}"
+      IMAGE_NAME: "{{ lookup('env', 'IMAGE_NAME') }}"
 
-#   tasks:
-#       - name: Ensure docker
-#         ansible.builtin.include_tasks:
-#             file: ensure_docker_tasks.ansible.yaml
+  tasks:
+      - name: Ensure docker
+        ansible.builtin.include_tasks:
+            file: ensure_docker_tasks.ansible.yaml
 
-#       - name: Ensure aws cli
-#         ansible.builtin.include_tasks:
-#             file: ensure_aws_cli_tasks.ansible.yaml
+      - name: Ensure aws cli
+        ansible.builtin.include_tasks:
+            file: ensure_aws_cli_tasks.ansible.yaml
 
-#       - name: Get AWS ECR password
-#         environment:
-#             AWS_ACCESS_KEY_ID: '{{ AWS_ACCESS_KEY_ID }}'
-#             AWS_SECRET_ACCESS_KEY: '{{ AWS_SECRET_ACCESS_KEY }}'
-#         ansible.builtin.shell: aws ecr get-login-password --region "{{ AWS_REGION }}"
-#         register: ECR_PASS
+      - name: Get AWS ECR password
+        environment:
+            AWS_ACCESS_KEY_ID: '{{ AWS_ACCESS_KEY_ID }}'
+            AWS_SECRET_ACCESS_KEY: '{{ AWS_SECRET_ACCESS_KEY }}'
+        ansible.builtin.shell: aws ecr get-login-password --region "{{ AWS_REGION }}"
+        register: ECR_PASS
 
-#       - name: Log into private registry and force re-authorization
-#         community.docker.docker_login:
-#             registry_url: '{{ REGISTRY_URL }}'
-#             username: AWS
-#             password: '{{ ECR_PASS.stdout }}'
-#             reauthorize: true
+      - name: Log into private registry and force re-authorization
+        community.docker.docker_login:
+            registry_url: '{{ REGISTRY_URL }}'
+            username: AWS
+            password: '{{ ECR_PASS.stdout }}'
+            reauthorize: true
 
-#       - name: Pull image
-#         community.docker.docker_image_pull:
-#             name: '{{ REGISTRY_URL }}/{{ IMAGE_NAME }}'
+      - name: Pull image
+        community.docker.docker_image_pull:
+            name: '{{ REGISTRY_URL }}/{{ IMAGE_NAME }}'
 
-#       - name: Re-create container
-#         community.docker.docker_container:
-#             name: "{{ CONTAINER_IMAGE_NAME }}"
-#             image: "{{ REGISTRY_URL }}/{{ IMAGE_NAME }}"
-#             state: started
-#             detach: true
-#             restart_policy: always
-#             recreate: true
-#             expose:
-#                 - "3000"
-#             ports:
-#                 - "0.0.0.0:80:3000/tcp"
-#                 - "[::]:80:3000/tcp"
+      - name: Re-create container
+        community.docker.docker_container:
+            name: "{{ CONTAINER_IMAGE_NAME }}"
+            image: "{{ REGISTRY_URL }}/{{ IMAGE_NAME }}"
+            state: started
+            detach: true
+            restart_policy: always
+            recreate: true
+            expose:
+                - "3000"
+            ports:
+                - "0.0.0.0:80:3000/tcp"
+                - "[::]:80:3000/tcp"
