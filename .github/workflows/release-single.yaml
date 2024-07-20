@@ -1,0 +1,66 @@
+name: Release Single
+
+on: [workflow_dispatch]
+
+jobs:
+    build:
+        name: build and push to ecr
+        runs-on: ubuntu-latest
+        environment: prod
+        steps:
+            - name: checkout repository
+              uses: actions/checkout@v4
+
+            - name: Install pipx
+              shell: bash
+              run: |
+                  sudo apt update
+                  sudo apt install pipx
+                  pipx ensurepath
+                  sudo pipx ensurepath --global
+
+            - name: Install aws
+              shell: bash
+              run: pipx install awscli
+
+            - name: build
+              run: make build-single
+
+            - name: push
+              env:
+                  AWS_REGION: ${{ secrets.AWS_REGION }}
+                  AWS_ACCOUNT_ID: ${{ secrets.AWS_ACCOUNT_ID }}
+                  AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
+                  AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+              run: make push-single
+
+    deploy-single:
+        env:
+            GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+            DEPLOYMENT_NAME: 'next_saas_single'
+
+        name: Deploy
+        runs-on: ubuntu-latest
+        environment: prod
+        steps:
+            - name: checkout repository
+              uses: actions/checkout@v4
+
+            - name: Create ssh key file
+              uses: ./.github/actions/touch_file_with_content
+              with:
+                  BASE_PATH: '$HOME/.ssh'
+                  FILE_NAME: ${{ env.DEPLOYMENT_NAME }}
+                  CONTENT: ${{ secrets.SSH_KEY }}
+
+            - name: deploy
+              uses: ./.github/actions/deploy
+              with:
+                  CONTAINER_IMAGE_NAME: 'next-saas-single'
+                  IMAGE_NAME: 'next-saas/single'
+                  HOST_NAME: ${{ env.DEPLOYMENT_NAME }}
+                  SSH_KEYDIR: ~/.ssh
+                  AWS_REGION: ${{ secrets.AWS_REGION }}
+                  AWS_ACCOUNT_ID: ${{ secrets.AWS_ACCOUNT_ID }}
+                  AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
+                  AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
