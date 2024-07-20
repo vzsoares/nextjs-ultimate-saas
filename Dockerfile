@@ -14,7 +14,6 @@ RUN if [ "$BUILD_TYPE" = "INSTANCES" ] ; then \
 
 COPY [".", "./"]
 
-RUN [ -f .env ] && rm .env 2> /dev/null
 RUN touch .env
 
 ENV NEXT_PUBLIC_BUILD_TYPE=$BUILD_TYPE
