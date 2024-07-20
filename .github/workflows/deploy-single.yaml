@@ -10,7 +10,7 @@ jobs:
 
         name: Deploy
         runs-on: ubuntu-latest
-        environment: deploy-env
+        environment: prod
         steps:
             - name: Create ssh key file
               shell: bash
@@ -21,7 +21,6 @@ jobs:
             - name: deploy
               uses: ./.github/actions/deploy.yaml
               with:
-                  ENVIRONMENT: 'deploy_env'
                   CONTAINER_IMAGE_NAME: 'next-saas-single'
                   IMAGE_NAME: 'next-saas/single'
                   HOST_NAME: ${{ env.DEPLOYMENT_NAME }}

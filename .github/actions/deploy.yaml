@@ -4,9 +4,6 @@ name: Deploy action
 description: deploy to ec2
 
 inputs:
-    ENVIRONMENT:
-        description: string
-        required: true
     IMAGE_NAME:
         description: string
         required: true
@@ -19,9 +16,6 @@ inputs:
     HOST_NAME:
         description: string
         required: true
-    # SSH_KEY:
-    #     description: string
-    #     required: true
     AWS_REGION:
         description: string
         required: true
@@ -34,9 +28,6 @@ inputs:
     AWS_SECRET_ACCESS_KEY:
         description: string
         required: true
-# on:
-#     workflow_call:
-#         secrets:
 
 runs:
     using: 'composite'
