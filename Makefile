@@ -91,7 +91,7 @@ deploy-local:
 > ansible-playbook -i ansible-playbooks/inventory.ansible.yaml ansible-playbooks/playbook_docker.ansible.yaml -vvv
 
 deploy-ec2:
->  ansible-playbook -i ansible-playbooks/inventory.ansible.aws_ec2.yml ansible-playbooks/playbook_docker.ansible.yaml --private-key ~/.ansible_key
+>  ansible-playbook -i ansible-playbooks/inventory.ansible.aws_ec2.yml ansible-playbooks/playbook_docker.ansible.yaml
 
 get-ec2-instance-public-ip:
 > @aws --region "${AWS_REGION}" ec2 describe-instances --instance-ids "${INSTANCE_ID}" --query "Reservations[*].Instances[*].PublicIpAddress" --output text | cat

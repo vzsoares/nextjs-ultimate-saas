@@ -42,7 +42,9 @@ runs:
 
         - name: Install ansible
           shell: bash
-          run: pipx install --include-deps ansible botocore boto3 --force
+          run: |
+              pipx install --include-deps ansible botocore boto3 --force
+              pipx inject ansible botocore boto3
 
         # - name: Install aws
         #   shell: bash
