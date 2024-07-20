@@ -18,8 +18,8 @@ jobs:
             - name: Create ssh key file
               uses: ./.github/actions/touch_file_with_content
               with:
-                  BASE_PATH: ${HOME}
-                  FILE_NAME: ${DEPLOYMENT_NAME}
+                  BASE_PATH: ${{ env.HOME }}
+                  FILE_NAME: ${{ env.DEPLOYMENT_NAME }}
                   CONTENT: ${{ secrets.SSH_KEY }}
 
             - name: deploy
