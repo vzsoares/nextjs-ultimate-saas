@@ -19,9 +19,9 @@ jobs:
               shell: bash
               run: |
                   mkdir -p ~/.ssh
-                  touch ~/.ssh/$DEPLOYMENT_NAME
-                  echo "${{ secrets.SSH_KEY }}" >> ~/$DEPLOYMENT_NAME
-                  chmod 400 ~/.ssh/$DEPLOYMENT_NAME
+                  touch ~/.ssh/${DEPLOYMENT_NAME}
+                  echo "${{ secrets.SSH_KEY }}" >> ~/${DEPLOYMENT_NAME}
+                  chmod 400 ~/.ssh/${DEPLOYMENT_NAME}
             - name: deploy
               uses: ./.github/actions/deploy
               with:
