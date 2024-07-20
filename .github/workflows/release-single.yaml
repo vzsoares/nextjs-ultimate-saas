@@ -4,6 +4,8 @@ on: [workflow_dispatch]
 
 jobs:
     build:
+        concurrency:
+          group: ${{ github.run_id }}
         name: Build & Push to ecr
         runs-on: ubuntu-latest
         environment: prod
@@ -35,6 +37,8 @@ jobs:
               run: make push-single
 
     deploy-single:
+        concurrency:
+          group: ${{ github.run_id }}
         env:
             GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
             DEPLOYMENT_NAME: 'next_saas_single'
