@@ -7,35 +7,35 @@ jobs:
         name: Build & Push to ecr
         runs-on: ubuntu-latest
         environment: prod
+        strategy:
+            matrix:
+                client: [foo, baz, bar]
         steps:
-            - name: skip
-              run: echo "skipping"
+            - name: checkout repository
+              uses: actions/checkout@v4
 
-    #             - name: checkout repository
-    #               uses: actions/checkout@v4
+            - name: Install pipx
+              shell: bash
+              run: |
+                  sudo apt update
+                  sudo apt install pipx
+                  pipx ensurepath
+                  sudo pipx ensurepath --global
 
-    #             - name: Install pipx
-    #               shell: bash
-    #               run: |
-    #                   sudo apt update
-    #                   sudo apt install pipx
-    #                   pipx ensurepath
-    #                   sudo pipx ensurepath --global
+            - name: Install aws
+              shell: bash
+              run: pipx install awscli
 
-    #             - name: Install aws
-    #               shell: bash
-    #               run: pipx install awscli
+            - name: build
+              run: make build-instance-${{ matrix.client }}
 
-    #             - name: build
-    #               run: make build-instances
-
-    #             - name: push
-    #               env:
-    #                   AWS_REGION: ${{ secrets.AWS_REGION }}
-    #                   AWS_ACCOUNT_ID: ${{ secrets.AWS_ACCOUNT_ID }}
-    #                   AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
-    #                   AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
-    #               run: make push-instances
+            - name: push
+              env:
+                  AWS_REGION: ${{ secrets.AWS_REGION }}
+                  AWS_ACCOUNT_ID: ${{ secrets.AWS_ACCOUNT_ID }}
+                  AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
+                  AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+              run: make push-instance-${{ matrix.client }}
 
     deploy-instances:
         needs: build
