@@ -54,7 +54,7 @@ jobs:
               with:
                   BASE_PATH: '$HOME/.ssh'
                   FILE_NAME: ${{ env.DEPLOYMENT_NAME }}
-                  CONTENT: ${{ secrets[format('{0}_{1}', SSH_KEY, matrix.client)] }}
+                  CONTENT: ${{ secrets[format('{0}_{1}', 'SSH_KEY', matrix.client)] }}
 
             - name: deploy
               uses: ./.github/actions/deploy
