@@ -1,6 +1,6 @@
-# fak yo TABs
-export
 -include .env
+export
+# fak yo TABs
 .RECIPEPREFIX := >
 .DEFAULT_GOAL := default
 
@@ -15,7 +15,7 @@ USE_LOCALHOST ?= "TRUE"
 BASE_IMAGE_NAME ?= "next-saas"
 IMAGE_TAG ?= "latest"
 
-CLIENTS := foo bar baz
+CLIENTS ?= foo bar baz
 
 export ANSIBLE_CONFIG="$(pwd)/ansible-playbooks/ansible.cfg"
 
@@ -60,10 +60,12 @@ run-instances:
 run-instance-%:
 > @${DOCKER} run -d -P --name ${BASE_IMAGE_NAME}-instance-$* ${BASE_IMAGE_NAME}-instance-$*
 
+# stop & remove running containers
 stop:
 > @${DOCKER} container stop ${BASE_IMAGE_NAME}-single $(foreach client,${CLIENTS}, ${BASE_IMAGE_NAME}-instance-${client}) &>2; \
     ${DOCKER} container rm -f ${BASE_IMAGE_NAME}-single $(foreach client,${CLIENTS}, ${BASE_IMAGE_NAME}-instance-${client}) &>2
 
+# push images to ecr
 push:
 > @if [ "${BUILD_STRATEGY}" = "INSTANCES" ]; then\
         ${MAKE} ${MAKEOPTS} push-instances;\
@@ -86,14 +88,9 @@ push-instance-%:
 > @${DOCKER} tag ${BASE_IMAGE_NAME}-instance-$*:latest ${AWS_ACCOUNT_ID}.dkr.ecr.${AWS_REGION}.amazonaws.com/${BASE_IMAGE_NAME}/instance-$*:latest
 > @${DOCKER} push ${AWS_ACCOUNT_ID}.dkr.ecr.${AWS_REGION}.amazonaws.com/${BASE_IMAGE_NAME}/instance-$*:latest
 
-deploy:
-> ansible-playbook -i ansible-playbooks/inventory.ansible.yaml ansible-playbooks/playbook_docker.ansible.yaml --private-key ~/.ansible_key
-
+# run playbook
 deploy-local:
-> ansible-playbook -i ansible-playbooks/inventory.ansible.yaml ansible-playbooks/playbook_docker.ansible.yaml -vvv
+> HOST_NAME=${LOCAL_HOST_NAME} ansible-playbook -i "${LOCAL_HOST_NAME}," ansible-playbooks/playbook_docker.ansible.yaml -k -K -u ${LOCAL_USER}
 
 deploy-ec2:
 >  ansible-playbook -i ansible-playbooks/inventory.ansible.aws_ec2.yml ansible-playbooks/playbook_docker.ansible.yaml
-
-get-ec2-instance-public-ip:
-> @aws --region "${AWS_REGION}" ec2 describe-instances --instance-ids "${INSTANCE_ID}" --query "Reservations[*].Instances[*].PublicIpAddress" --output text | cat
