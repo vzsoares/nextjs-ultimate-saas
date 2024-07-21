@@ -1,18 +1,57 @@
-# Nextjs Ultimate SaaS
+# NextJs Ultimate SaaS
 
-## Status: IN DEVELOPMENT
+`TODO badges`
 
-## TODO:
+`TODO image that represents it all`
 
--   [x] Base layout with factories and theme strategy
--   [x] Base app with 3 clients foo bar baz
--   [x] Local development build with SINGLE and INSTANCES mode
-    > SINGLE = all clients share the same instance(VM)
-    > INSTANCES = each client has its own instance(VM)
--   [ ] Deploy for SINGLE mode
--   [ ] Deploy for INSTANCE mode
+Have many clients in one single repo and deploy in one single machine(or many)
 
-### TODO [file tree](<https://tree.nathanfriend.io/?s=(%27options!(%27fancy!true~fullPath4~trailingSlash4~rootDot4)~8(%278%27app*2A*-37x*2B*-30will%20user%20factory%20passing%2026*30mighCbee%20a%20defaulC2*layout0minimal6uration-5components*3s*-Home3Factory7x5middleware79does%20the%20magic5%27)~version!%271%27)*5--%20%2007x92client3page4!false5%5Cn6%20config7.ts8source!9%20%23Ct%20%01C987654320-*>)
+## Why 🤔
+
+The possibility to deploy all clients in one single vm is mainly about cost 💵, one NextJs machine can handle a lot of work and thus is optimal to start as a new product with a few clients.
+
+Then when it grows you can finally give each client its own vm
+
+## How 👨‍💻
+
+The trick here is to use [middleware](https://nextjs.org/docs/app/building-your-application/routing/middleware) in conjunction with a `Header`
+(e.g: X-App-Client) and use that to `mask` a [generic  route](https://nextjs.org/docs/app/building-your-application/routing/dynamic-routes) with [redirect and rewrite](https://nextjs.org/docs/app/building-your-application/routing/middleware#nextresponse) 
+
+## Features 📃
+
+- Single deployment mode
+- Instances deployment mode
+- Ansible for deploy
+- Containerized Application
+- Github action to automate
+- Factories for each page
+- Theme context strategy
+- Chewed out scripts in Makefile
+
+## [File tree 🌲](<https://tree.nathanfriend.io/?s=(%27options!(%27fancy!true~fullPath6~trailingSlash6~rootDot6)~B(%27B%27F3Jorkflows*..F%20actions3ansible-8%20...8src*appR%5Bc9%5DR05K4SINGLE*5s24INSTANCES*7RQsR05%207%20factories*middlewarHmagic*C9InterfacHc9KstrategyO%20routing%2C%20theming3Makefile2all%20you%20need%27)~version!%271%27)*300%20%202O-%203%5Cn4usedJhen%205...Q6!false7components8playbooks39lientBsource!F.githubHe.ts2J%20wKs%20O%20-QpageR*0%01RQOKJHFB987654320*>)
+
+```
+.github
+└── workflows
+    └── ...github actions
+ansible-playbooks
+└── ...playbooks
+src
+├── app
+│   └── [client]
+│       └── ...pages used when SINGLE
+├── ...pages -- used when INSTANCES
+├── components
+│   └── pages
+│       └── ...page components factories
+├── middleware.ts -- magic
+└── ClientInterface.ts -- clients strategy - routing, theming
+Makefile -- all you need
+```
+
+## Architecture 🎨
+
+`TODO diagrams`
 
 ### base sketch
 
@@ -21,3 +60,8 @@
 ### example
 
 <img src='/static/foobazbar.jpg'/>
+
+## TODO:
+
+-   [ ] [Infrastructure as code](https://developer.hashicorp.com/terraform?product_intent=terraform)
+-   [ ] [Document Makefile better](https://gist.github.com/prwhite/8168133?permalink_comment_id=4160123) 
