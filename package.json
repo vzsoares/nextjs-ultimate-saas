@@ -11,6 +11,7 @@
         "typescript"
     ],
     "scripts": {
+        "release": "release-it",
         "dev": "next",
         "build": "next build",
         "start": "next start",
@@ -54,6 +55,7 @@
         "lint-staged": "15.2.6",
         "prettier": "3.3.2",
         "prettier-plugin-sort-json": "4.0.0",
+        "release-it": "17.6.0",
         "typescript": "5.4.5"
     }
 }
