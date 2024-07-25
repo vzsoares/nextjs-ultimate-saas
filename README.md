@@ -10,10 +10,10 @@
 [![Connect on linkedin](https://img.shields.io/badge/Connect-grey?style=for-the-badge&logo=linkedin)](https://www.linkedin.com/in/vinicius-zenha/)
 
 <p align="center">
-<img src="./static/next-saas-sample-hero.png" width="300px">
+<img src="./static/next-saas-sample-hero.png" width="400px">
 </p>
 
-Have many clients in one single repo and deploy in one single machine(or many)
+Have many clients in one single machine(or many)
 
 ## Why 🤔
 
