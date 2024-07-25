@@ -62,7 +62,7 @@ Makefile -- all you need
 
 ### infra:
 
-<img align='center' src="./static/next-saas-sample-instances.png">
+<img align='center' src="./static/next-saas-sample-single.png">
 
 <img align='center' src="./static/next-saas-sample-instances.png">
 
