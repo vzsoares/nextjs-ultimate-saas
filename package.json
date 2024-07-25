@@ -2,7 +2,7 @@
     "$schema": "https://raw.githubusercontent.com/SchemaStore/schemastore/master/src/schemas/json/package.json",
     "name": "nextjs-ultimate-saas",
     "description": "Have multiple clients in one single instance",
-    "version": "1.0.0",
+    "version": "2.0.0",
     "private": true,
     "author": "Vinicius Zenha <vinicius.zenha@gmail.com> (@vzsoares)",
     "license": "MIT",
