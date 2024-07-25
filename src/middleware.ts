@@ -33,14 +33,6 @@ export function middleware(req: NextRequest) {
     const reqClient = req.headers.get('X-Saas-Client') as string;
     const reqPath = req.nextUrl.pathname;
     const url = req.nextUrl.clone();
-    console.log({
-        PartnerHost,
-        reqHost,
-        useLocal: USE_LOCALHOST,
-        BUILD_TYPE,
-        BASE_CLIENT,
-        url: JSON.stringify(req.nextUrl.toJSON()),
-    });
 
     if (reqPath === '/404') return NextResponse.next();
 
