@@ -41,3 +41,12 @@ module "instance_single" {
   }
   instance_identity_client = null
 }
+
+# Distributions
+module "distribution_single_foo" {
+  source              = "./modules/cloudfront"
+  dns_origin          = module.instance_single.public_dns
+  client_header_value = "foo"
+  cname_dns           = "tmp-next-saas-single-foo.zenhalab.com"
+  description         = "next-saas-single-foo"
+}
