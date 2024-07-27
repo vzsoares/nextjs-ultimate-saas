@@ -11,7 +11,7 @@ resource "aws_ecr_repository" "ecr_repo" {
 
   tags = {
     Terraform = true
-    domain    = var.domain
+    Domain    = var.domain
   }
 }
 

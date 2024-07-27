@@ -5,6 +5,7 @@ locals {
   domain     = "next-saas"
 }
 
+# Registries
 module "single_repo" {
   source = "./modules/ecr"
   name   = "${local.domain}/single"
@@ -29,3 +30,14 @@ module "instance_bar_repo" {
   domain = local.domain
 }
 
+# Instances
+module "instance_single" {
+  source        = "./modules/ec2"
+  domain        = local.domain
+  name          = "next-saas-single"
+  key_pair_name = "next-saas-ssh"
+  instance_identity_type = {
+    Type = "single"
+  }
+  instance_identity_client = null
+}
