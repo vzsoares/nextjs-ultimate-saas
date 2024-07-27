@@ -10,6 +10,12 @@ variable "client_header_value" {
 variable "description" {
   type = string
 }
+variable "stage" {
+  type = string
+}
+variable "domain" {
+  type = string
+}
 
 resource "aws_cloudfront_distribution" "distribution" {
   origin {
@@ -65,6 +71,8 @@ resource "aws_cloudfront_distribution" "distribution" {
 
   tags = {
     Terraform = "true"
+    Stage     = var.stage
+    Domain    = var.domain
   }
 
 }

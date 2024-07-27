@@ -4,6 +4,9 @@ variable "domain" {
 variable "name" {
   type = string
 }
+variable "stage" {
+  type = string
+}
 
 resource "aws_ecr_repository" "ecr_repo" {
   name                 = var.name
@@ -13,6 +16,7 @@ resource "aws_ecr_repository" "ecr_repo" {
   tags = {
     Terraform = true
     Domain    = var.domain
+    Stage     = var.stage
   }
 }
 

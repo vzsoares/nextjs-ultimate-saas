@@ -7,6 +7,9 @@ variable "key_pair_name" {
 variable "domain" {
   type = string
 }
+variable "stage" {
+  type = string
+}
 # identity is required so that ansible finds the instance
 variable "instance_identity_type" {
   type = object({ Type = string })
@@ -28,6 +31,7 @@ resource "aws_instance" "instance" {
     Terraform = "true"
     Domain    = var.domain
     Name      = var.name
+    Stage     = var.stage
   }, var.instance_identity_type, var.instance_identity_client)
 }
 
