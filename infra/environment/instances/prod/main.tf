@@ -77,7 +77,7 @@ module "distribution_instance_foo" {
   dns_origin          = module.instance_foo.public_dns
   client_header_value = "foo"
   cname_dns           = "next-saas-instance-foo.zenhalab.com"
-  description         = "next-saas-single-foo"
+  description         = "next-saas-instance-foo"
 }
 module "distribution_instance_baz" {
   source              = "../../../modules/cloudfront"
@@ -86,7 +86,7 @@ module "distribution_instance_baz" {
   dns_origin          = module.instance_baz.public_dns
   client_header_value = "baz"
   cname_dns           = "next-saas-instance-baz.zenhalab.com"
-  description         = "next-saas-single-baz"
+  description         = "next-saas-instance-baz"
 }
 module "distribution_instance_bar" {
   source              = "../../../modules/cloudfront"
@@ -95,6 +95,6 @@ module "distribution_instance_bar" {
   dns_origin          = module.instance_bar.public_dns
   client_header_value = "bar"
   cname_dns           = "next-saas-instance-bar.zenhalab.com"
-  description         = "next-saas-single-bar"
+  description         = "next-saas-instance-bar"
 }
 
