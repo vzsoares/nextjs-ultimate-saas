@@ -45,7 +45,7 @@ They will both check for `NEXT_PUBLIC_BUILD_TYPE` to chose how to behave
 
 ### Single:
 
-The NextJs middleware will check for a `Header` `X-App-Client` and then rewrite the route to /[client]/about. 
+The NextJs middleware will check for a `Header` `X-App-Client` and then rewrite the route to /[client]/about.
 All the clients will share the same VM
 
 ### Instances:
@@ -102,8 +102,3 @@ Makefile -- all you need
 
 <img src='/static/foobazbar.jpg'/>
 
-## TODO:
-
--   [ ] [Infrastructure as code](https://developer.hashicorp.com/terraform?product_intent=terraform)
--   [ ] [Document Makefile better](https://gist.github.com/prwhite/8168133?permalink_comment_id=4160123)
--   [ ] Demonstration Video
