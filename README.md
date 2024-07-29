@@ -94,10 +94,6 @@ Makefile -- all you need
 
 <img align='center' src="./static/next-saas-sample-instances.png">
 
-### base sketch
-
-<img src='/static/basesketch.png'/>
-
 ### layout showcase
 
 <img src='/static/foobazbar.jpg'/>
