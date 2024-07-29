@@ -85,7 +85,7 @@ push-single: ##@ Push single instance to registry
 push-instances: ##@ Push all instances
 > ${MAKE} ${MAKEOPTS} $(foreach client,${CLIENTS}, push-instance-${client})
 
-push-instance-%: ##@ Push % instance
+push-instance-%: ##@ Push instance %
 > @${AWS} ecr get-login-password --region ${AWS_REGION} | ${DOCKER} login --username AWS --password-stdin ${AWS_ACCOUNT_ID}.dkr.ecr.${AWS_REGION}.amazonaws.com
 > @${DOCKER} tag ${BASE_IMAGE_NAME}-instance-$*:latest ${AWS_ACCOUNT_ID}.dkr.ecr.${AWS_REGION}.amazonaws.com/${BASE_IMAGE_NAME}/instance-$*:latest
 > @${DOCKER} push ${AWS_ACCOUNT_ID}.dkr.ecr.${AWS_REGION}.amazonaws.com/${BASE_IMAGE_NAME}/instance-$*:latest
